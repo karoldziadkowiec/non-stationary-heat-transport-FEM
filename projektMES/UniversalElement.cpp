@@ -29,21 +29,21 @@ void UniversalElement::computeShapeFunctionDerivatives()
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
-    for (int k = 0; k < N; k++) {
-        for (int i = 0; i < N; i++) {
-            int index = k * N + i;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            int index = i * N + j;
 
             // dN/dKsi
-            dN_dKsi[index][0] = dN1_dKsi(tableRow.xk[k]);
-            dN_dKsi[index][1] = dN2_dKsi(tableRow.xk[k]);
-            dN_dKsi[index][2] = dN3_dKsi(tableRow.xk[k]);
-            dN_dKsi[index][3] = dN4_dKsi(tableRow.xk[k]);
+            dN_dKsi[index][0] = dN1_dKsi(tableRow.xk[i]);
+            dN_dKsi[index][1] = dN2_dKsi(tableRow.xk[i]);
+            dN_dKsi[index][2] = dN3_dKsi(tableRow.xk[i]);
+            dN_dKsi[index][3] = dN4_dKsi(tableRow.xk[i]);
 
             // dN/dEta
-            dN_dEta[index][0] = dN1_dEta(tableRow.xk[k]);
-            dN_dEta[index][1] = dN2_dEta(tableRow.xk[k]);
-            dN_dEta[index][2] = dN3_dEta(tableRow.xk[k]);
-            dN_dEta[index][3] = dN4_dEta(tableRow.xk[k]);
+            dN_dEta[index][0] = dN1_dEta(tableRow.xk[i]);
+            dN_dEta[index][1] = dN2_dEta(tableRow.xk[i]);
+            dN_dEta[index][2] = dN3_dEta(tableRow.xk[i]);
+            dN_dEta[index][3] = dN4_dEta(tableRow.xk[i]);
         }
     }
 }
