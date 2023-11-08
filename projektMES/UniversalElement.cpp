@@ -34,16 +34,16 @@ void UniversalElement::computeShapeFunctionDerivatives()
             int index = i * N + j;
 
             // dN/dKsi
-            dN_dKsi[index][0] = dN1_dKsi(tableRow.xk[i]);
-            dN_dKsi[index][1] = dN2_dKsi(tableRow.xk[i]);
-            dN_dKsi[index][2] = dN3_dKsi(tableRow.xk[i]);
-            dN_dKsi[index][3] = dN4_dKsi(tableRow.xk[i]);
+            dN_dKsi[index][0] = dN1_dKsi(tableRow.xk[j]);
+            dN_dKsi[index][1] = dN2_dKsi(tableRow.xk[j]);
+            dN_dKsi[index][2] = dN3_dKsi(tableRow.xk[j]);
+            dN_dKsi[index][3] = dN4_dKsi(tableRow.xk[j]);
 
             // dN/dEta
-            dN_dEta[index][0] = dN1_dEta(tableRow.xk[i]);
-            dN_dEta[index][1] = dN2_dEta(tableRow.xk[i]);
-            dN_dEta[index][2] = dN3_dEta(tableRow.xk[i]);
-            dN_dEta[index][3] = dN4_dEta(tableRow.xk[i]);
+            dN_dEta[index][0] = dN1_dEta(tableRow.xk[j]);
+            dN_dEta[index][1] = dN2_dEta(tableRow.xk[j]);
+            dN_dEta[index][2] = dN3_dEta(tableRow.xk[j]);
+            dN_dEta[index][3] = dN4_dEta(tableRow.xk[j]);
         }
     }
 }
@@ -54,46 +54,46 @@ void UniversalElement::printShapeFunctionDerivatives()
     cout << "\ndN/dKsi:" << endl;
     for (int i = 0; i < N * N; i++) {
         for (int j = 0; j < 4; j++) {
-            cout << "[" << i+1 << "][" << j+1 << "] = " << dN_dKsi[i][j] << endl;
+            cout << "[" << i + 1 << "][" << j + 1 << "] = " << dN_dKsi[i][j] << endl;
         }
     }
 
     cout << "\ndN/dEta:" << endl;
     for (int i = 0; i < N * N; i++) {
         for (int j = 0; j < 4; j++) {
-            cout << "[" << i+1 << "][" << j+1 << "] = " << dN_dEta[i][j] << endl;
+            cout << "[" << i + 1 << "][" << j + 1 << "] = " << dN_dEta[i][j] << endl;
         }
     }
 }
 
 double dN1_dKsi(double eta) {
-	return ((-1.0 / 4.0) * (1.0 - eta));
+    return (-(1.0 / 4.0) * (1.0 - eta));
 }
 
 double dN2_dKsi(double eta) {
-	return ((1.0 / 4.0) * (1.0 - eta));
+    return ((1.0 / 4.0) * (1.0 - eta));
 }
 
 double dN3_dKsi(double eta) {
-	return ((1.0 / 4.0) * (1.0 + eta));
+    return ((1.0 / 4.0) * (1.0 + eta));
 }
 
 double dN4_dKsi(double eta) {
-	return ((-1.0 / 4.0) * (1.0 + eta));
+    return (-(1.0 / 4.0) * (1.0 + eta));
 }
 
 double dN1_dEta(double ksi) {
-	return ((-1.0 / 4.0) * (1.0 - ksi));
+    return (-(1.0 / 4.0) * (1.0 - ksi));
 }
 
 double dN2_dEta(double ksi) {
-	return ((-1.0 / 4.0) * (1.0 + ksi));
+    return (-(1.0 / 4.0) * (1.0 + ksi));
 }
 
 double dN3_dEta(double ksi) {
-	return ((1.0 / 4.0) * (1.0 + ksi));
+    return ((1.0 / 4.0) * (1.0 + ksi));
 }
 
 double dN4_dEta(double ksi) {
-	return ((1.0 / 4.0) * (1.0 - ksi));
+    return ((1.0 / 4.0) * (1.0 - ksi));
 }

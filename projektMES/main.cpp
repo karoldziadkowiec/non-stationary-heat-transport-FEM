@@ -14,6 +14,8 @@ double function_2D(double x, double y);
 void lab2();
 //LAB3
 void lab3();
+//LAB4
+void lab4();
 
 int main()
 {
@@ -26,6 +28,7 @@ int main()
 
     lab2();
     lab3();
+    lab4();
 
     delete[] grid.nodes;
     delete[] grid.elements;
@@ -75,4 +78,9 @@ void lab3() {
     UniversalElement universalElement(N);
     universalElement.computeShapeFunctionDerivatives();
     universalElement.printShapeFunctionDerivatives();
+}
+
+//LAB4
+void lab4() {
+    
 }
