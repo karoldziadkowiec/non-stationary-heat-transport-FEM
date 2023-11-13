@@ -14,13 +14,13 @@ GaussQuadrature returnRowOfGaussTable(int N)
     {
     case 2:
         tableRow.k = new int[2] {0, 1};
-        tableRow.xk = new double[2] {-1.0 / sqrt(3), 1.0 / sqrt(3)};
+        tableRow.xk = new double[2] {-1.0/sqrt(3), 1.0/sqrt(3)};
         tableRow.wk = new double[2] {1.0, 1.0};
         break;
     case 3:
         tableRow.k = new int[3] {0, 1, 2};
-        tableRow.xk = new double[3] {-sqrt(3.0 / 5.0), 0.0, sqrt(3.0 / 5.0)};
-        tableRow.wk = new double[3] {5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0};
+        tableRow.xk = new double[3] {-sqrt(3.0/5.0), 0.0, sqrt(3.0/5.0)};
+        tableRow.wk = new double[3] {5.0/9.0, 8.0/9.0, 5.0/9.0};
         break;
     case 4:
         tableRow.k = new int[4] {0, 1, 2, 3};

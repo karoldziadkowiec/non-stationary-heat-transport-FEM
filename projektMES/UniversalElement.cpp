@@ -34,10 +34,10 @@ void UniversalElement::computeShapeFunctionDerivatives()
             int index = i * N + j;
 
             // dN/dKsi
-            dN_dKsi[index][0] = dN1_dKsi(tableRow.xk[j]);
-            dN_dKsi[index][1] = dN2_dKsi(tableRow.xk[j]);
-            dN_dKsi[index][2] = dN3_dKsi(tableRow.xk[j]);
-            dN_dKsi[index][3] = dN4_dKsi(tableRow.xk[j]);
+            dN_dKsi[index][0] = dN1_dKsi(tableRow.xk[i]);
+            dN_dKsi[index][1] = dN2_dKsi(tableRow.xk[i]);
+            dN_dKsi[index][2] = dN3_dKsi(tableRow.xk[i]);
+            dN_dKsi[index][3] = dN4_dKsi(tableRow.xk[i]);
 
             // dN/dEta
             dN_dEta[index][0] = dN1_dEta(tableRow.xk[j]);
