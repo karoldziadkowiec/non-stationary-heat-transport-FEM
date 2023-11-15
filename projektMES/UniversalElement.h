@@ -16,7 +16,7 @@ struct UniversalElement
     UniversalElement(int N);
     ~UniversalElement();
 
-    void computeShapeFunctionDerivatives();
+    void calculateShapeFunctionDerivatives();
     void printShapeFunctionDerivatives();
 };
 

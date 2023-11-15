@@ -5,9 +5,12 @@
 #include "Grid.h"
 #include "GaussQuadrature.h"
 #include "UniversalElement.h"
+#include "Jakobian.h"
 
 using namespace std;
 
+//LAB1
+void lab1();
 //LAB 2
 double function_1D(double x);
 double function_2D(double x, double y);
@@ -16,9 +19,23 @@ void lab2();
 void lab3();
 //LAB4
 void lab4();
+void lab4_Test1_4_4();
+void lab4_Test2_4_4_MixGrid();
 
 int main()
 {
+    //lab1();
+    //lab2();
+    //lab3();
+    lab4();
+    lab4_Test1_4_4();
+    //lab4_Test2_4_4_MixGrid();
+
+    return 0;
+}
+
+//LAB 1
+void lab1() {
     Grid grid;
     GlobalData globalData;
     string fileName = "Test1_4_4.txt";
@@ -26,14 +43,8 @@ int main()
     readDataFromFile(fileName, globalData, grid);
     printGridData(globalData, grid);
 
-    lab2();
-    lab3();
-    lab4();
-
     delete[] grid.nodes;
     delete[] grid.elements;
-
-    return 0;
 }
 
 //LAB 2
@@ -76,11 +87,128 @@ void lab2() {
 void lab3() {
     int N = 2; //Nodes number
     UniversalElement universalElement(N);
-    universalElement.computeShapeFunctionDerivatives();
+    universalElement.calculateShapeFunctionDerivatives();
     universalElement.printShapeFunctionDerivatives();
 }
 
 //LAB4
 void lab4() {
-    
+    cout << "\nTEST" << endl;
+    Grid testGrid;
+    GlobalData globalData;
+    globalData.elementsNumber = 1;
+    int kt = 30;
+
+    testGrid.elements = new Element[1];
+    testGrid.elements[0].id[0] = 1;
+    testGrid.elements[0].id[1] = 2;
+    testGrid.elements[0].id[2] = 3;
+    testGrid.elements[0].id[3] = 4;
+
+    testGrid.nodes = new Node[4];
+    testGrid.nodes[0].x = 0;
+    testGrid.nodes[0].y = 0;
+
+    testGrid.nodes[1].x = 0.025;
+    testGrid.nodes[1].y = 0;
+
+    testGrid.nodes[2].x = 0.025;
+    testGrid.nodes[2].y = 0.025;
+
+    testGrid.nodes[3].x = 0;
+    testGrid.nodes[3].y = 0.025;
+
+    int N = 2; //Nodes number
+    UniversalElement universalElement(N);
+    universalElement.calculateShapeFunctionDerivatives();
+
+    Jakobian jakobian(N);
+    for (int i = 0; i < globalData.elementsNumber; i++) {
+        jakobian.calculateDerivativesAtPci(universalElement, testGrid, i);
+        jakobian.printJakobianMatrix();
+        jakobian.calculateJakobianMatrix();
+        jakobian.printJakobianMatrix();
+        jakobian.calculateShapeFunctionDerivativesForPci(universalElement);
+        jakobian.printShapeFunctionDerivativesForPci();
+        jakobian.calculateMatrixHForXandYForPci();
+        jakobian.printMatrixHForXandYForPci();
+        jakobian.calculateMatrixHpci(kt);
+        jakobian.printMatrixHpci();
+        jakobian.calculateMatrixH();
+        jakobian.printMatrixH();
+    }
+}
+
+void lab4_Test1_4_4() {
+    cout << "\n Test1_4_4.txt" << endl;
+
+    Grid grid;
+    GlobalData globalData;
+    string fileName = "Test1_4_4.txt";
+
+    readDataFromFile(fileName, globalData, grid);
+    printGridData(globalData, grid);
+    int kt = globalData.conductivity;
+
+    int N = 2; //Nodes number
+    UniversalElement universalElement(N);
+    universalElement.calculateShapeFunctionDerivatives();
+    universalElement.printShapeFunctionDerivatives();
+
+    Jakobian jakobian(N);
+    for (int i = 0; i < globalData.elementsNumber; i++) {
+        cout << "\n\tELEMENT " << i + 1 << endl;
+        jakobian.calculateDerivativesAtPci(universalElement, grid, i);
+        jakobian.printJakobianMatrix();
+        jakobian.calculateJakobianMatrix();
+        jakobian.printJakobianMatrix();
+        jakobian.calculateShapeFunctionDerivativesForPci(universalElement);
+        jakobian.printShapeFunctionDerivativesForPci();
+        jakobian.calculateMatrixHForXandYForPci();
+        jakobian.printMatrixHForXandYForPci();
+        jakobian.calculateMatrixHpci(kt);
+        jakobian.printMatrixHpci();
+        jakobian.calculateMatrixH();
+        jakobian.printMatrixH();
+    }
+
+    delete[] grid.nodes;
+    delete[] grid.elements;
+}
+
+void lab4_Test2_4_4_MixGrid() {
+    cout << "\n Test2_4_4_MixGrid.txt" << endl;
+
+    Grid grid;
+    GlobalData globalData;
+    string fileName = "Test2_4_4_MixGrid.txt";
+
+    readDataFromFile(fileName, globalData, grid);
+    printGridData(globalData, grid);
+    int kt = globalData.conductivity;
+
+    int N = 2; //Nodes number
+    UniversalElement universalElement(N);
+    universalElement.calculateShapeFunctionDerivatives();
+    universalElement.printShapeFunctionDerivatives();
+
+    Jakobian jakobian(N);
+    for (int i = 0; i < globalData.elementsNumber; i++) {
+        cout << "\n\tELEMENT " << i + 1 << endl;
+        jakobian.calculateDerivativesAtPci(universalElement, grid, i);
+        jakobian.printJakobianMatrix();
+        jakobian.calculateJakobianMatrix();
+        jakobian.printJakobianMatrix();
+        jakobian.calculateShapeFunctionDerivativesForPci(universalElement);
+        jakobian.printShapeFunctionDerivativesForPci();
+        jakobian.calculateMatrixHForXandYForPci();
+        jakobian.printMatrixHForXandYForPci();
+        jakobian.calculateMatrixHpci(kt);
+        jakobian.printMatrixHpci();
+        jakobian.calculateMatrixH();
+        jakobian.printMatrixH();
+    }
+
+    delete[] grid.nodes;
+    delete[] grid.elements;
 }

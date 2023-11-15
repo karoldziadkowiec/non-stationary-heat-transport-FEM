@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="GaussQuadrature.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="Jakobian.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="UniversalElement.cpp" />
   </ItemGroup>
@@ -136,6 +137,7 @@
     <ClInclude Include="GaussQuadrature.h" />
     <ClInclude Include="GlobalData.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="Jakobian.h" />
     <ClInclude Include="UniversalElement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

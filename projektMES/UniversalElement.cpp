@@ -25,7 +25,7 @@ UniversalElement::~UniversalElement()
     delete[] dN_dEta;
 }
 
-void UniversalElement::computeShapeFunctionDerivatives()
+void UniversalElement::calculateShapeFunctionDerivatives()
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
@@ -33,13 +33,13 @@ void UniversalElement::computeShapeFunctionDerivatives()
         for (int j = 0; j < N; j++) {
             int index = i * N + j;
 
-            // dN/dKsi
+            // dNi/dKsi
             dN_dKsi[index][0] = dN1_dKsi(tableRow.xk[i]);
             dN_dKsi[index][1] = dN2_dKsi(tableRow.xk[i]);
             dN_dKsi[index][2] = dN3_dKsi(tableRow.xk[i]);
             dN_dKsi[index][3] = dN4_dKsi(tableRow.xk[i]);
 
-            // dN/dEta
+            // dNi/dEta
             dN_dEta[index][0] = dN1_dEta(tableRow.xk[j]);
             dN_dEta[index][1] = dN2_dEta(tableRow.xk[j]);
             dN_dEta[index][2] = dN3_dEta(tableRow.xk[j]);
@@ -48,17 +48,16 @@ void UniversalElement::computeShapeFunctionDerivatives()
     }
 }
 
-
 void UniversalElement::printShapeFunctionDerivatives()
 {
-    cout << "\ndN/dKsi:" << endl;
+    cout << "\ndNi/dKsi:" << endl;
     for (int i = 0; i < N * N; i++) {
         for (int j = 0; j < 4; j++) {
             cout << "[" << i + 1 << "][" << j + 1 << "] = " << dN_dKsi[i][j] << endl;
         }
     }
 
-    cout << "\ndN/dEta:" << endl;
+    cout << "\ndNi/dEta:" << endl;
     for (int i = 0; i < N * N; i++) {
         for (int j = 0; j < 4; j++) {
             cout << "[" << i + 1 << "][" << j + 1 << "] = " << dN_dEta[i][j] << endl;

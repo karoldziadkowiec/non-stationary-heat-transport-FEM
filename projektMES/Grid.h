@@ -2,6 +2,7 @@
 #define GRID_H
 
 #include "GlobalData.h"
+#include <string> 
 
 struct Node
 {
