@@ -21,6 +21,8 @@ void lab3();
 void lab4();
 void lab4_Test1_4_4();
 void lab4_Test2_4_4_MixGrid();
+//LAB5
+void lab5();
 
 int main()
 {
@@ -28,8 +30,9 @@ int main()
     //lab2();
     //lab3();
     lab4();
-    lab4_Test1_4_4();
+    //lab4_Test1_4_4();
     //lab4_Test2_4_4_MixGrid();
+    //lab5();
 
     return 0;
 }
@@ -97,7 +100,7 @@ void lab4() {
     Grid testGrid;
     GlobalData globalData;
     globalData.elementsNumber = 1;
-    int kt = 30;
+    int kt = 30; // conductivity
 
     testGrid.elements = new Element[1];
     testGrid.elements[0].id[0] = 1;
@@ -121,15 +124,20 @@ void lab4() {
     int N = 2; //Nodes number
     UniversalElement universalElement(N);
     universalElement.calculateShapeFunctionDerivatives();
+    universalElement.printShapeFunctionDerivatives();
 
     Jakobian jakobian(N);
-    for (int i = 0; i < globalData.elementsNumber; i++) {
-        jakobian.calculateDerivativesAtPci(universalElement, testGrid, i);
-        jakobian.printJakobianMatrix();
-        jakobian.calculateJakobianMatrix();
-        jakobian.printJakobianMatrix();
-        jakobian.calculateShapeFunctionDerivativesForPci(universalElement);
-        jakobian.printShapeFunctionDerivativesForPci();
+    for (int elNumber = 0; elNumber < globalData.elementsNumber; elNumber++) {
+        cout << "\n\n\t\tELEMENT " << elNumber + 1 << endl;
+        for (int pc = 0; pc < N * N; pc++) {
+            cout << "\n\tPunkt calkowania " << pc + 1 << endl;
+            jakobian.calculateDerivativesAtPci(universalElement, testGrid, elNumber, pc);
+            jakobian.printJakobianMatrix();
+            jakobian.printDetJ();
+            jakobian.calculateJakobianMatrix();
+            jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
+            jakobian.printShapeFunctionDerivativesForPci(pc);
+        }
         jakobian.calculateMatrixHForXandYForPci();
         jakobian.printMatrixHForXandYForPci();
         jakobian.calculateMatrixHpci(kt);
@@ -148,7 +156,7 @@ void lab4_Test1_4_4() {
 
     readDataFromFile(fileName, globalData, grid);
     printGridData(globalData, grid);
-    int kt = globalData.conductivity;
+    int kt = globalData.conductivity; // conductivity
 
     int N = 2; //Nodes number
     UniversalElement universalElement(N);
@@ -156,14 +164,17 @@ void lab4_Test1_4_4() {
     universalElement.printShapeFunctionDerivatives();
 
     Jakobian jakobian(N);
-    for (int i = 0; i < globalData.elementsNumber; i++) {
-        cout << "\n\tELEMENT " << i + 1 << endl;
-        jakobian.calculateDerivativesAtPci(universalElement, grid, i);
-        jakobian.printJakobianMatrix();
-        jakobian.calculateJakobianMatrix();
-        jakobian.printJakobianMatrix();
-        jakobian.calculateShapeFunctionDerivativesForPci(universalElement);
-        jakobian.printShapeFunctionDerivativesForPci();
+    for (int elNumber = 0; elNumber < globalData.elementsNumber; elNumber++) {
+        cout << "\n\n\t\tELEMENT " << elNumber + 1 << endl;
+        for (int pc = 0; pc < N * N; pc++) {
+            cout << "\n\tPunkt calkowania " << pc + 1 << endl;
+            jakobian.calculateDerivativesAtPci(universalElement, grid, elNumber, pc);
+            jakobian.printJakobianMatrix();
+            jakobian.printDetJ();
+            jakobian.calculateJakobianMatrix();
+            jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
+            jakobian.printShapeFunctionDerivativesForPci(pc);
+        }
         jakobian.calculateMatrixHForXandYForPci();
         jakobian.printMatrixHForXandYForPci();
         jakobian.calculateMatrixHpci(kt);
@@ -185,7 +196,7 @@ void lab4_Test2_4_4_MixGrid() {
 
     readDataFromFile(fileName, globalData, grid);
     printGridData(globalData, grid);
-    int kt = globalData.conductivity;
+    int kt = globalData.conductivity; // conductivity
 
     int N = 2; //Nodes number
     UniversalElement universalElement(N);
@@ -193,14 +204,17 @@ void lab4_Test2_4_4_MixGrid() {
     universalElement.printShapeFunctionDerivatives();
 
     Jakobian jakobian(N);
-    for (int i = 0; i < globalData.elementsNumber; i++) {
-        cout << "\n\tELEMENT " << i + 1 << endl;
-        jakobian.calculateDerivativesAtPci(universalElement, grid, i);
-        jakobian.printJakobianMatrix();
-        jakobian.calculateJakobianMatrix();
-        jakobian.printJakobianMatrix();
-        jakobian.calculateShapeFunctionDerivativesForPci(universalElement);
-        jakobian.printShapeFunctionDerivativesForPci();
+    for (int elNumber = 0; elNumber < globalData.elementsNumber; elNumber++) {
+        cout << "\n\n\t\tELEMENT " << elNumber + 1 << endl;
+        for (int pc = 0; pc < N * N; pc++) {
+            cout << "\n\tPunkt calkowania " << pc + 1 << endl;
+            jakobian.calculateDerivativesAtPci(universalElement, grid, elNumber, pc);
+            jakobian.printJakobianMatrix();
+            jakobian.printDetJ();
+            jakobian.calculateJakobianMatrix();
+            jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
+            jakobian.printShapeFunctionDerivativesForPci(pc);
+        }
         jakobian.calculateMatrixHForXandYForPci();
         jakobian.printMatrixHForXandYForPci();
         jakobian.calculateMatrixHpci(kt);
@@ -211,4 +225,56 @@ void lab4_Test2_4_4_MixGrid() {
 
     delete[] grid.nodes;
     delete[] grid.elements;
+}
+
+void lab5() {
+    cout << "\nTEST" << endl;
+    Grid testGrid;
+    GlobalData globalData;
+    globalData.elementsNumber = 1;
+    int kt = 30; // conductivity
+
+    testGrid.elements = new Element[1];
+    testGrid.elements[0].id[0] = 1;
+    testGrid.elements[0].id[1] = 2;
+    testGrid.elements[0].id[2] = 3;
+    testGrid.elements[0].id[3] = 4;
+
+    testGrid.nodes = new Node[4];
+    testGrid.nodes[0].x = 0;
+    testGrid.nodes[0].y = 0;
+
+    testGrid.nodes[1].x = 0.025;
+    testGrid.nodes[1].y = 0;
+
+    testGrid.nodes[2].x = 0.025;
+    testGrid.nodes[2].y = 0.025;
+
+    testGrid.nodes[3].x = 0;
+    testGrid.nodes[3].y = 0.025;
+
+    int N = 2; //Nodes number
+    UniversalElement universalElement(N);
+    universalElement.calculateShapeFunctionDerivatives();
+    universalElement.printShapeFunctionDerivatives();
+
+    Jakobian jakobian(N);
+    for (int elNumber = 0; elNumber < globalData.elementsNumber; elNumber++) {
+        cout << "\n\n\t\tELEMENT " << elNumber + 1 << endl;
+        for (int pc = 0; pc < N * N; pc++) {
+            cout << "\n\tPunkt calkowania " << pc + 1 << endl;
+            jakobian.calculateDerivativesAtPci(universalElement, testGrid, elNumber, pc);
+            jakobian.printJakobianMatrix();
+            jakobian.printDetJ();
+            jakobian.calculateJakobianMatrix();
+            jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
+            jakobian.printShapeFunctionDerivativesForPci(pc);
+        }
+        jakobian.calculateMatrixHForXandYForPci();
+        jakobian.printMatrixHForXandYForPci();
+        jakobian.calculateMatrixHpci(kt);
+        jakobian.printMatrixHpci();
+        jakobian.calculateMatrixH();
+        jakobian.printMatrixH();
+    }
 }

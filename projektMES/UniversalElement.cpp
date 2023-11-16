@@ -25,25 +25,44 @@ UniversalElement::~UniversalElement()
     delete[] dN_dEta;
 }
 
+Surface::Surface(int n)
+{
+    this->n = n;
+
+    N = new double* [n * n];
+
+    for (int i = 0; i < n * n; i++) {
+        N[i] = new double[4] {};
+    }
+}
+
+Surface::~Surface()
+{
+    for (int i = 0; i < n * n; i++) {
+        delete[] N[i];
+    }
+    delete[] N;
+}
+
 void UniversalElement::calculateShapeFunctionDerivatives()
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            int index = i * N + j;
+            int pc = i * N + j;
 
             // dNi/dKsi
-            dN_dKsi[index][0] = dN1_dKsi(tableRow.xk[i]);
-            dN_dKsi[index][1] = dN2_dKsi(tableRow.xk[i]);
-            dN_dKsi[index][2] = dN3_dKsi(tableRow.xk[i]);
-            dN_dKsi[index][3] = dN4_dKsi(tableRow.xk[i]);
+            dN_dKsi[pc][0] = dN1_dKsi(tableRow.xk[i]);
+            dN_dKsi[pc][1] = dN2_dKsi(tableRow.xk[i]);
+            dN_dKsi[pc][2] = dN3_dKsi(tableRow.xk[i]);
+            dN_dKsi[pc][3] = dN4_dKsi(tableRow.xk[i]);
 
             // dNi/dEta
-            dN_dEta[index][0] = dN1_dEta(tableRow.xk[j]);
-            dN_dEta[index][1] = dN2_dEta(tableRow.xk[j]);
-            dN_dEta[index][2] = dN3_dEta(tableRow.xk[j]);
-            dN_dEta[index][3] = dN4_dEta(tableRow.xk[j]);
+            dN_dEta[pc][0] = dN1_dEta(tableRow.xk[j]);
+            dN_dEta[pc][1] = dN2_dEta(tableRow.xk[j]);
+            dN_dEta[pc][2] = dN3_dEta(tableRow.xk[j]);
+            dN_dEta[pc][3] = dN4_dEta(tableRow.xk[j]);
         }
     }
 }
@@ -51,17 +70,19 @@ void UniversalElement::calculateShapeFunctionDerivatives()
 void UniversalElement::printShapeFunctionDerivatives()
 {
     cout << "\ndNi/dKsi:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << dN_dKsi[i][j] << endl;
+    for (int pc = 0; pc < N * N; pc++) {
+        for (int i = 0; i < 4; i++) {
+            cout << dN_dKsi[pc][i] << "   " ;
         }
+        cout << endl;
     }
 
     cout << "\ndNi/dEta:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << dN_dEta[i][j] << endl;
+    for (int pc = 0; pc < N * N; pc++) {
+        for (int i = 0; i < 4; i++) {
+            cout << dN_dEta[pc][i] << "   ";
         }
+        cout << endl;
     }
 }
 

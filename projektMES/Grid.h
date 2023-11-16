@@ -8,11 +8,14 @@ struct Node
 {
     double x;
     double y;
+    int bc;
 };
 
 struct Element
 {
     int id[4];
+    int H[4][4];
+    int Hbc[4][4];
 };
 
 struct Grid

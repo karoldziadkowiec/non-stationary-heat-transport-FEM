@@ -13,11 +13,22 @@ struct UniversalElement
     double** dN_dKsi;
     double** dN_dEta;
 
+    //Surface surface[4];
+
     UniversalElement(int N);
     ~UniversalElement();
 
     void calculateShapeFunctionDerivatives();
     void printShapeFunctionDerivatives();
+};
+
+struct Surface
+{
+    int n;
+    double** N;
+
+    Surface(int n);
+    ~Surface();
 };
 
 double dN1_dKsi(double eta);

@@ -102,6 +102,35 @@ void readDataFromFile(const string& filename, GlobalData& globalData, Grid& grid
                 }
             }
         }
+        // BC
+        else if (parameterName == "*BC")
+        {
+            for (int i = 0; i < globalData.nodesNumber; i++)
+            {
+                grid.nodes[i].bc = 0;
+            }
+
+            for (int i = 0; i < globalData.nodesNumber; i++)
+            {
+                int id;
+                char comma;  // ',' separator
+                if (file >> id)
+                {
+                    grid.nodes[id - 1].bc = 1;
+
+                    if (!(file >> comma) || comma != ',')
+                    {
+                        cerr << "Error reading separator at line " << (i + 1) << endl;
+                        return;
+                    }
+                }
+                else
+                {
+                    cerr << "Error reading BC data at line " << (i + 1) << endl;
+                    return;
+                }
+            }
+        }
     }
 
     file.close();
@@ -124,11 +153,13 @@ void printGridData(const GlobalData& globalData, const Grid& grid)
 
     for (int i = 0; i < globalData.nodesNumber; i++)
     {
-        cout << "Node " << i + 1 << ": x = " << grid.nodes[i].x << ", y = " << grid.nodes[i].y << endl;
+        cout << "Node " << i + 1 << ": x = " << grid.nodes[i].x << ", y = " << grid.nodes[i].y << ", BC = " << grid.nodes[i].bc << endl;
     }
 
     for (int i = 0; i < globalData.elementsNumber; i++)
     {
         cout << "Element " << i + 1 << ":  " << grid.elements[i].id[0] << ", " << grid.elements[i].id[1] << ", " << grid.elements[i].id[2] << ", " << grid.elements[i].id[3] << endl;
     }
+
+    cout << defaultfloat;
 }

@@ -22,35 +22,27 @@ struct Jakobian
     double kt;
     double dV;
 
-    double** xH_AtPc1;
-    double** yH_AtPc1;
-    double** xH_AtPc2;
-    double** yH_AtPc2;
-    double** xH_AtPc3;
-    double** yH_AtPc3;
-    double** xH_AtPc4;
-    double** yH_AtPc4;
+    double*** xH_AtPci;
+    double*** yH_AtPci;
 
-    double** Hpc1;
-    double** Hpc2;
-    double** Hpc3;
-    double** Hpc4;
+    double*** Hpci;
 
     double** H;
 
     Jakobian(int N);
     ~Jakobian();
 
-    void calculateDerivativesAtPci(const UniversalElement& universalElement, const Grid& grid, int i);
+    void calculateDerivativesAtPci(const UniversalElement& universalElement, const Grid& grid, int elementNumber, int pc);
     void printJakobianMatrix();
     double calculateDetJ();
+    void printDetJ();
     double calculate1_DetJ();
     void calculateJakobianMatrix();
-    void calculateShapeFunctionDerivativesForPci(const UniversalElement& universalElement);
-    void printShapeFunctionDerivativesForPci();
+    void calculateShapeFunctionDerivativesForPci(const UniversalElement& universalElement, int pc);
+    void printShapeFunctionDerivativesForPci(int pc);
     void calculateMatrixHForXandYForPci();
     void printMatrixHForXandYForPci();
-    void calculateMatrixHpci(int kt);
+    void calculateMatrixHpci(int conductivity);
     void printMatrixHpci();
     void calculateMatrixH();
     void printMatrixH();

@@ -3,40 +3,45 @@
 #include "Grid.h"
 #include "Jakobian.h"
 
-void Jakobian::calculateDerivativesAtPci(const UniversalElement& universalElement, const Grid& grid, int i)
+void Jakobian::calculateDerivativesAtPci(const UniversalElement& universalElement, const Grid& grid, int elementNumber, int pc)
 {
-    dx_dKsi = universalElement.dN_dKsi[0][0] * grid.nodes[grid.elements[i].id[0] - 1].x +
-        universalElement.dN_dKsi[0][1] * grid.nodes[grid.elements[i].id[1] - 1].x +
-        universalElement.dN_dKsi[0][2] * grid.nodes[grid.elements[i].id[2] - 1].x +
-        universalElement.dN_dKsi[0][3] * grid.nodes[grid.elements[i].id[3] - 1].x;
+    dx_dKsi = universalElement.dN_dKsi[pc][0] * grid.nodes[grid.elements[elementNumber].id[0] - 1].x +
+        universalElement.dN_dKsi[pc][1] * grid.nodes[grid.elements[elementNumber].id[1] - 1].x +
+        universalElement.dN_dKsi[pc][2] * grid.nodes[grid.elements[elementNumber].id[2] - 1].x +
+        universalElement.dN_dKsi[pc][3] * grid.nodes[grid.elements[elementNumber].id[3] - 1].x;
 
-    dy_dKsi = -1 * (universalElement.dN_dKsi[0][0] * grid.nodes[grid.elements[i].id[0] - 1].y +
-        universalElement.dN_dKsi[0][1] * grid.nodes[grid.elements[i].id[1] - 1].y +
-        universalElement.dN_dKsi[0][2] * grid.nodes[grid.elements[i].id[2] - 1].y +
-        universalElement.dN_dKsi[0][3] * grid.nodes[grid.elements[i].id[3] - 1].y);
+    dy_dKsi = universalElement.dN_dKsi[pc][0] * grid.nodes[grid.elements[elementNumber].id[0] - 1].y +
+        universalElement.dN_dKsi[pc][1] * grid.nodes[grid.elements[elementNumber].id[1] - 1].y +
+        universalElement.dN_dKsi[pc][2] * grid.nodes[grid.elements[elementNumber].id[2] - 1].y +
+        universalElement.dN_dKsi[pc][3] * grid.nodes[grid.elements[elementNumber].id[3] - 1].y;
 
-    dx_dEta = -1 * (universalElement.dN_dEta[0][0] * grid.nodes[grid.elements[i].id[0] - 1].x +
-        universalElement.dN_dEta[0][1] * grid.nodes[grid.elements[i].id[1] - 1].x +
-        universalElement.dN_dEta[0][2] * grid.nodes[grid.elements[i].id[2] - 1].x +
-        universalElement.dN_dEta[0][3] * grid.nodes[grid.elements[i].id[3] - 1].x);
+    dx_dEta = universalElement.dN_dEta[pc][0] * grid.nodes[grid.elements[elementNumber].id[0] - 1].x +
+        universalElement.dN_dEta[pc][1] * grid.nodes[grid.elements[elementNumber].id[1] - 1].x +
+        universalElement.dN_dEta[pc][2] * grid.nodes[grid.elements[elementNumber].id[2] - 1].x +
+        universalElement.dN_dEta[pc][3] * grid.nodes[grid.elements[elementNumber].id[3] - 1].x;
 
-    dy_dEta = universalElement.dN_dEta[0][0] * grid.nodes[grid.elements[i].id[0] - 1].y +
-        universalElement.dN_dEta[0][1] * grid.nodes[grid.elements[i].id[1] - 1].y +
-        universalElement.dN_dEta[0][2] * grid.nodes[grid.elements[i].id[2] - 1].y +
-        universalElement.dN_dEta[0][3] * grid.nodes[grid.elements[i].id[3] - 1].y;
+    dy_dEta = universalElement.dN_dEta[pc][0] * grid.nodes[grid.elements[elementNumber].id[0] - 1].y +
+        universalElement.dN_dEta[pc][1] * grid.nodes[grid.elements[elementNumber].id[1] - 1].y +
+        universalElement.dN_dEta[pc][2] * grid.nodes[grid.elements[elementNumber].id[2] - 1].y +
+        universalElement.dN_dEta[pc][3] * grid.nodes[grid.elements[elementNumber].id[3] - 1].y;
 }
 
 void Jakobian::printJakobianMatrix()
 {
-    cout << "Jakobian Matrix" << endl;
-    cout << dy_dEta << " " << dy_dKsi << endl;
-    cout << dx_dEta << " " << dx_dKsi << endl;
+    cout << "\nJakobian Matrix" << endl;
+    cout << dx_dKsi << "\t" << dy_dKsi << endl;
+    cout << dx_dEta << "\t" << dy_dEta << endl;
 }
 
 double Jakobian::calculateDetJ()
 {
     double detJ = (dy_dEta * dx_dKsi) - (dy_dKsi * dx_dEta);
     return detJ;
+}
+
+void Jakobian::printDetJ()
+{
+    cout << "\nDetJ = " << calculateDetJ() << endl;
 }
 
 double Jakobian::calculate1_DetJ()
@@ -61,19 +66,10 @@ Jakobian::Jakobian(int N)
     dN_dx = new double* [N * N];
     dN_dy = new double* [N * N];
 
-    xH_AtPc1 = new double* [N * N];
-    yH_AtPc1 = new double* [N * N];
-    xH_AtPc2 = new double* [N * N];
-    yH_AtPc2 = new double* [N * N];
-    xH_AtPc3 = new double* [N * N];
-    yH_AtPc3 = new double* [N * N];
-    xH_AtPc4 = new double* [N * N];
-    yH_AtPc4 = new double* [N * N];
+    xH_AtPci = new double** [N * N];
+    yH_AtPci = new double** [N * N];
 
-    Hpc1 = new double* [N * N];
-    Hpc2 = new double* [N * N];
-    Hpc3 = new double* [N * N];
-    Hpc4 = new double* [N * N];
+    Hpci = new double** [N * N];
 
     H = new double* [N * N];
 
@@ -81,19 +77,19 @@ Jakobian::Jakobian(int N)
         dN_dx[i] = new double[4] {};
         dN_dy[i] = new double[4] {};
 
-        xH_AtPc1[i] = new double[4] {};
-        yH_AtPc1[i] = new double[4] {};
-        xH_AtPc2[i] = new double[4] {};
-        yH_AtPc2[i] = new double[4] {};
-        xH_AtPc3[i] = new double[4] {};
-        yH_AtPc3[i] = new double[4] {};
-        xH_AtPc4[i] = new double[4] {};
-        yH_AtPc4[i] = new double[4] {};
+        xH_AtPci[i] = new double* [N * N];
+        yH_AtPci[i] = new double* [N * N];
 
-        Hpc1[i] = new double[4] {};
-        Hpc2[i] = new double[4] {};
-        Hpc3[i] = new double[4] {};
-        Hpc4[i] = new double[4] {};
+        for (int j = 0; j < 4; j++) {
+            xH_AtPci[i][j] = new double[4] {};
+            yH_AtPci[i][j] = new double[4] {};
+        }
+
+        Hpci[i] = new double* [N * N];
+
+        for (int j = 0; j < 4; j++) {
+            Hpci[i][j] = new double[4] {};
+        }
 
         H[i] = new double[4] {};
     }
@@ -105,205 +101,120 @@ Jakobian::~Jakobian()
         delete[] dN_dx[i];
         delete[] dN_dy[i];
 
-        delete[] xH_AtPc1[i];
-        delete[] yH_AtPc1[i];
-        delete[] xH_AtPc2[i];
-        delete[] yH_AtPc2[i];
-        delete[] xH_AtPc3[i];
-        delete[] yH_AtPc3[i];
-        delete[] xH_AtPc4[i];
-        delete[] yH_AtPc4[i];
+        for (int j = 0; j < 4; j++) {
+            delete[] xH_AtPci[i][j];
+            delete[] yH_AtPci[i][j];
+        }
 
-        delete[] Hpc1[i];
-        delete[] Hpc2[i];
-        delete[] Hpc3[i];
-        delete[] Hpc4[i];
+        delete[] xH_AtPci[i];
+        delete[] yH_AtPci[i];
+
+        delete[] Hpci[i];
 
         delete[] H[i];
     }
     delete[] dN_dx;
     delete[] dN_dy;
 
-    delete[] xH_AtPc1;
-    delete[] yH_AtPc1;
-    delete[] xH_AtPc2;
-    delete[] yH_AtPc2;
-    delete[] xH_AtPc3;
-    delete[] yH_AtPc3;
-    delete[] xH_AtPc4;
-    delete[] yH_AtPc4;
+    delete[] xH_AtPci;
+    delete[] yH_AtPci;
 
-    delete[] Hpc1;
-    delete[] Hpc2;
-    delete[] Hpc3;
-    delete[] Hpc4;
+    delete[] Hpci;
 
     delete[] H;
 }
 
-void Jakobian::calculateShapeFunctionDerivativesForPci(const UniversalElement& universalElement)
+void Jakobian::calculateShapeFunctionDerivativesForPci(const UniversalElement& universalElement, int pc)
 {
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            int index = i * N + j;
+    dN_dx[pc][0] = dy_dEta * universalElement.dN_dKsi[pc][0] + (-1 * dy_dKsi) * universalElement.dN_dEta[pc][0];
+    dN_dx[pc][1] = dy_dEta * universalElement.dN_dKsi[pc][1] + (-1 * dy_dKsi) * universalElement.dN_dEta[pc][1];
+    dN_dx[pc][2] = dy_dEta * universalElement.dN_dKsi[pc][2] + (-1 * dy_dKsi) * universalElement.dN_dEta[pc][2];
+    dN_dx[pc][3] = dy_dEta * universalElement.dN_dKsi[pc][3] + (-1 * dy_dKsi) * universalElement.dN_dEta[pc][3];
 
-             dN_dx[index][0] = dy_dEta * universalElement.dN_dKsi[index][0] + dy_dKsi * universalElement.dN_dEta[index][0];
-             dN_dx[index][1] = dy_dEta * universalElement.dN_dKsi[index][1] + dy_dKsi * universalElement.dN_dEta[index][1];
-             dN_dx[index][2] = dy_dEta * universalElement.dN_dKsi[index][2] + dy_dKsi * universalElement.dN_dEta[index][2];
-             dN_dx[index][3] = dy_dEta * universalElement.dN_dKsi[index][3] + dy_dKsi * universalElement.dN_dEta[index][3];
-
-             dN_dy[index][0] = dx_dEta * universalElement.dN_dKsi[index][0] + dx_dKsi * universalElement.dN_dEta[index][0];
-             dN_dy[index][1] = dx_dEta * universalElement.dN_dKsi[index][1] + dx_dKsi * universalElement.dN_dEta[index][1];
-             dN_dy[index][2] = dx_dEta * universalElement.dN_dKsi[index][2] + dx_dKsi * universalElement.dN_dEta[index][2];
-             dN_dy[index][3] = dx_dEta * universalElement.dN_dKsi[index][3] + dx_dKsi * universalElement.dN_dEta[index][3];
-        }
-    }
+    dN_dy[pc][0] = (-1 * dx_dEta) * universalElement.dN_dKsi[pc][0] + dx_dKsi * universalElement.dN_dEta[pc][0];
+    dN_dy[pc][1] = (-1 * dx_dEta) * universalElement.dN_dKsi[pc][1] + dx_dKsi * universalElement.dN_dEta[pc][1];
+    dN_dy[pc][2] = (-1 * dx_dEta) * universalElement.dN_dKsi[pc][2] + dx_dKsi * universalElement.dN_dEta[pc][2];
+    dN_dy[pc][3] = (-1 * dx_dEta) * universalElement.dN_dKsi[pc][3] + dx_dKsi * universalElement.dN_dEta[pc][3];
 }
 
 
-void Jakobian::printShapeFunctionDerivativesForPci()
+void Jakobian::printShapeFunctionDerivativesForPci(int pc)
 {
     cout << "\ndNi/dx:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << dN_dx[i][j] << endl;
-        }
+    for (int i = 0; i < 4; i++) {
+        cout << dN_dx[pc][i] << "  ";
     }
+    cout << endl;
 
     cout << "\ndNi/dy:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << dN_dy[i][j] << endl;
-        }
+    for (int i = 0; i < 4; i++) {
+        cout << dN_dy[pc][i] << "  ";
     }
+    cout << endl;
 }
 
 void Jakobian::calculateMatrixHForXandYForPci()
 {
-    for (int i = 0; i < N * N; ++i)
+    for (int pc = 0; pc < N * N; pc++)
     {
-        for (int j = 0; j < N * N; ++j)
+        for (int i = 0; i < 4; i++)
         {
-            xH_AtPc1[i][j] = dN_dx[0][i] * dN_dx[0][j];
-            yH_AtPc1[i][j] = dN_dy[0][i] * dN_dy[0][j];
-
-            xH_AtPc2[i][j] = dN_dx[1][i] * dN_dx[1][j];
-            yH_AtPc2[i][j] = dN_dy[1][i] * dN_dy[1][j];
-
-            xH_AtPc3[i][j] = dN_dx[2][i] * dN_dx[2][j];
-            yH_AtPc3[i][j] = dN_dy[2][i] * dN_dy[2][j];
-
-            xH_AtPc4[i][j] = dN_dx[3][i] * dN_dx[3][j];
-            yH_AtPc4[i][j] = dN_dy[3][i] * dN_dy[3][j];
+            for (int j = 0; j < 4; j++)
+            {
+                xH_AtPci[pc][i][j] = dN_dx[pc][i] * dN_dx[pc][j];
+                yH_AtPci[pc][i][j] = dN_dy[pc][i] * dN_dy[pc][j];
+            }
         }
     }
 }
 
 void Jakobian::printMatrixHForXandYForPci()
 {
-    cout << "\nMatrix H in pc1 for x:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << xH_AtPc1[i][j] << endl;
+    for (int pc = 0; pc < N * N; pc++) {
+        cout << "\nMatrix H in pc" << pc + 1 << " for dx:" << endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                cout << xH_AtPci[pc][i][j] << "  ";
+            }
+            cout << endl;
         }
-    }
 
-    cout << "\nMatrix H in pc1 for y:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << yH_AtPc1[i][j] << endl;
-        }
-    }
-
-    cout << "\nMatrix H in pc2 for x:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << xH_AtPc2[i][j] << endl;
-        }
-    }
-
-    cout << "\nMatrix H in pc2 for y:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << yH_AtPc2[i][j] << endl;
-        }
-    }
-
-    cout << "\nMatrix H in pc3 for x:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << xH_AtPc3[i][j] << endl;
-        }
-    }
-
-    cout << "\nMatrix H in pc3 for y:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << yH_AtPc3[i][j] << endl;
-        }
-    }
-
-    cout << "\nMatrix H in pc4 for x:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << xH_AtPc4[i][j] << endl;
-        }
-    }
-
-    cout << "\nMatrix H in pc4 for y:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << yH_AtPc4[i][j] << endl;
+        cout << "\nMatrix H in pc" << pc + 1 << " for dy:" << endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                cout << yH_AtPci[pc][i][j] << "  ";
+            }
+            cout << endl;
         }
     }
 }
 
-void Jakobian::calculateMatrixHpci(int kt)
+void Jakobian::calculateMatrixHpci(int conductivity)
 {
+    int kt = conductivity; // conductivity
     dV = calculate1_DetJ(); //area of the integrated element 
 
-    for (int i = 0; i < N * N; ++i)
+    for (int pc = 0; pc < N * N; pc++)
     {
-        for (int j = 0; j < N * N; ++j)
+        for (int i = 0; i < 4; i++)
         {
-            Hpc1[i][j] = kt * (xH_AtPc1[i][j] + yH_AtPc1[i][j]) * dV;
-
-            Hpc2[i][j] = kt * (xH_AtPc2[i][j] + yH_AtPc2[i][j]) * dV;
-
-            Hpc3[i][j] = kt * (xH_AtPc3[i][j] + yH_AtPc3[i][j]) * dV;
-
-            Hpc4[i][j] = kt * (xH_AtPc4[i][j] + yH_AtPc4[i][j]) * dV;
+            for (int j = 0; j < 4; j++)
+            {
+                Hpci[pc][i][j] = kt * (xH_AtPci[pc][i][j] + yH_AtPci[pc][i][j]) * dV;
+            }
         }
     }
 }
 
 void Jakobian::printMatrixHpci()
 {
-    cout << "\nHpc1:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << Hpc1[i][j] << endl;
-        }
-    }
-
-    cout << "\nHpc2:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << Hpc2[i][j] << endl;
-        }
-    }
-
-    cout << "\nHpc3:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << Hpc3[i][j] << endl;
-        }
-    }
-
-    cout << "\nHpc4:" << endl;
-    for (int i = 0; i < N * N; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << Hpc4[i][j] << endl;
+    for (int pc = 0; pc < N * N; pc++) {
+        cout << "\nHpc" << pc + 1 << ":" << endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                cout << Hpci[pc][i][j] << "  ";
+            }
+            cout << endl;
         }
     }
 }
@@ -312,17 +223,19 @@ void Jakobian::calculateMatrixH()
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
-    double w1 = tableRow.wk[0];
-    double w2 = tableRow.wk[1];
-
-    for (int i = 0; i < N * N; ++i)
+    for (int i = 0; i < 4; i++)
     {
-        for (int j = 0; j < N * N; ++j)
+        for (int j = 0; j < 4; j++)
         {
-            H[i][j] = (Hpc1[i][j] * w1 * w1) +
-                (Hpc2[i][j] * w2 * w1) +
-                (Hpc3[i][j] * w1 * w2) +
-                (Hpc4[i][j] * w2 * w2);
+            H[i][j] = 0;
+
+            for (int pc = 0; pc < N * N; pc++)
+            {
+                int w1 = pc / N;
+                int w2 = pc % N;
+
+                H[i][j] += Hpci[pc][i][j] * tableRow.wk[w1] * tableRow.wk[w2];
+            }
         }
     }
 }
@@ -330,9 +243,10 @@ void Jakobian::calculateMatrixH()
 void Jakobian::printMatrixH()
 {
     cout << "\nMatrix [H]:" << endl;
-    for (int i = 0; i < N * N; i++) {
+    for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            cout << "[" << i + 1 << "][" << j + 1 << "] = " << H[i][j] << endl;
+            cout << H[i][j] << "   ";
         }
+        cout << endl;
     }
 }
