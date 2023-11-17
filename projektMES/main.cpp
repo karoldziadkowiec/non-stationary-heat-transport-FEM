@@ -137,10 +137,9 @@ void lab4() {
             jakobian.calculateJakobianMatrix();
             jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
             jakobian.printShapeFunctionDerivativesForPci(pc);
+            jakobian.calculateMatrixHForXandYForPci(pc);
+            jakobian.calculateMatrixHpci(pc, kt);
         }
-        jakobian.calculateMatrixHForXandYForPci();
-        jakobian.printMatrixHForXandYForPci();
-        jakobian.calculateMatrixHpci(kt);
         jakobian.printMatrixHpci();
         jakobian.calculateMatrixH();
         jakobian.printMatrixH();
@@ -174,10 +173,9 @@ void lab4_Test1_4_4() {
             jakobian.calculateJakobianMatrix();
             jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
             jakobian.printShapeFunctionDerivativesForPci(pc);
+            jakobian.calculateMatrixHForXandYForPci(pc);
+            jakobian.calculateMatrixHpci(pc, kt);
         }
-        jakobian.calculateMatrixHForXandYForPci();
-        jakobian.printMatrixHForXandYForPci();
-        jakobian.calculateMatrixHpci(kt);
         jakobian.printMatrixHpci();
         jakobian.calculateMatrixH();
         jakobian.printMatrixH();
@@ -214,10 +212,9 @@ void lab4_Test2_4_4_MixGrid() {
             jakobian.calculateJakobianMatrix();
             jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
             jakobian.printShapeFunctionDerivativesForPci(pc);
+            jakobian.calculateMatrixHForXandYForPci(pc);
+            jakobian.calculateMatrixHpci(pc, kt);
         }
-        jakobian.calculateMatrixHForXandYForPci();
-        jakobian.printMatrixHForXandYForPci();
-        jakobian.calculateMatrixHpci(kt);
         jakobian.printMatrixHpci();
         jakobian.calculateMatrixH();
         jakobian.printMatrixH();
@@ -269,10 +266,9 @@ void lab5() {
             jakobian.calculateJakobianMatrix();
             jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
             jakobian.printShapeFunctionDerivativesForPci(pc);
+            jakobian.calculateMatrixHForXandYForPci(pc);
+            jakobian.calculateMatrixHpci(pc, kt);
         }
-        jakobian.calculateMatrixHForXandYForPci();
-        jakobian.printMatrixHForXandYForPci();
-        jakobian.calculateMatrixHpci(kt);
         jakobian.printMatrixHpci();
         jakobian.calculateMatrixH();
         jakobian.printMatrixH();

@@ -153,55 +153,28 @@ void Jakobian::printShapeFunctionDerivativesForPci(int pc)
     cout << endl;
 }
 
-void Jakobian::calculateMatrixHForXandYForPci()
+void Jakobian::calculateMatrixHForXandYForPci(int pc)
 {
-    for (int pc = 0; pc < N * N; pc++)
+    for (int i = 0; i < 4; i++)
     {
-        for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
         {
-            for (int j = 0; j < 4; j++)
-            {
-                xH_AtPci[pc][i][j] = dN_dx[pc][i] * dN_dx[pc][j];
-                yH_AtPci[pc][i][j] = dN_dy[pc][i] * dN_dy[pc][j];
-            }
+            xH_AtPci[pc][i][j] = dN_dx[pc][i] * dN_dx[pc][j];
+            yH_AtPci[pc][i][j] = dN_dy[pc][i] * dN_dy[pc][j];
         }
     }
 }
 
-void Jakobian::printMatrixHForXandYForPci()
-{
-    for (int pc = 0; pc < N * N; pc++) {
-        cout << "\nMatrix H in pc" << pc + 1 << " for dx:" << endl;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                cout << xH_AtPci[pc][i][j] << "  ";
-            }
-            cout << endl;
-        }
-
-        cout << "\nMatrix H in pc" << pc + 1 << " for dy:" << endl;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                cout << yH_AtPci[pc][i][j] << "  ";
-            }
-            cout << endl;
-        }
-    }
-}
-
-void Jakobian::calculateMatrixHpci(int conductivity)
+void Jakobian::calculateMatrixHpci(int pc, int conductivity)
 {
     int kt = conductivity; // conductivity
     dV = calculate1_DetJ(); //area of the integrated element 
 
-    for (int pc = 0; pc < N * N; pc++)
+    for (int i = 0; i < 4; i++)
     {
-        for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
         {
-            for (int j = 0; j < 4; j++)
-            {
-                Hpci[pc][i][j] = kt * (xH_AtPci[pc][i][j] + yH_AtPci[pc][i][j]) * dV;
-            }
+            Hpci[pc][i][j] = kt * (xH_AtPci[pc][i][j] + yH_AtPci[pc][i][j]) * dV;
         }
     }
 }

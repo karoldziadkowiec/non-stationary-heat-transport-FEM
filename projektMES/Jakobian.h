@@ -40,9 +40,8 @@ struct Jakobian
     void calculateJakobianMatrix();
     void calculateShapeFunctionDerivativesForPci(const UniversalElement& universalElement, int pc);
     void printShapeFunctionDerivativesForPci(int pc);
-    void calculateMatrixHForXandYForPci();
-    void printMatrixHForXandYForPci();
-    void calculateMatrixHpci(int conductivity);
+    void calculateMatrixHForXandYForPci(int pc);
+    void calculateMatrixHpci(int pc, int conductivity);
     void printMatrixHpci();
     void calculateMatrixH();
     void printMatrixH();
