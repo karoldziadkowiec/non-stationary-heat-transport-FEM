@@ -107,7 +107,7 @@ void readDataFromFile(const string& filename, GlobalData& globalData, Grid& grid
         {
             for (int i = 0; i < globalData.nodesNumber; i++)
             {
-                grid.nodes[i].bc = 0;
+                grid.nodes[i].BC = 0;
             }
 
             for (int i = 0; i < globalData.nodesNumber; i++)
@@ -116,7 +116,7 @@ void readDataFromFile(const string& filename, GlobalData& globalData, Grid& grid
                 char comma;  // ',' separator
                 if (file >> id)
                 {
-                    grid.nodes[id - 1].bc = 1;
+                    grid.nodes[id - 1].BC = 1;
 
                     if (!(file >> comma) || comma != ',')
                     {
@@ -153,7 +153,7 @@ void printGridData(const GlobalData& globalData, const Grid& grid)
 
     for (int i = 0; i < globalData.nodesNumber; i++)
     {
-        cout << "Node " << i + 1 << ": x = " << grid.nodes[i].x << ", y = " << grid.nodes[i].y << ", BC = " << grid.nodes[i].bc << endl;
+        cout << "Node " << i + 1 << ": x = " << grid.nodes[i].x << ", y = " << grid.nodes[i].y << ", BC = " << grid.nodes[i].BC << endl;
     }
 
     for (int i = 0; i < globalData.elementsNumber; i++)

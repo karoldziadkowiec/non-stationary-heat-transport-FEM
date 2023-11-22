@@ -13,6 +13,33 @@ UniversalElement::UniversalElement(int N)
         dN_dKsi[i] = new double[4] {};
         dN_dEta[i] = new double[4] {};
     }
+
+    for (int i = 0; i < 4; i++) {
+        surface[i].ksiEtaMatrix = new double* [N];
+        for (int j = 0; j < N; j++) {
+            surface[i].ksiEtaMatrix[j] = new double[2] {};
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        surface[i].Ni = new double* [N];
+        for (int j = 0; j < N; j++) {
+            surface[i].Ni[j] = new double[4] {};
+            for (int k = 0; k < 4; k++) {
+                surface[i].Ni[j][k] = 0.0;
+            }
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        surface[i].Hbc_AtPci = new double** [N];
+        for (int j = 0; j < N; j++) {
+            surface[i].Hbc_AtPci[j] = new double* [4];
+            for (int k = 0; k < 4; k++) {
+                surface[i].Hbc_AtPci[j][k] = new double[4] {};
+            }
+        }
+    }
 }
 
 UniversalElement::~UniversalElement()
@@ -23,25 +50,6 @@ UniversalElement::~UniversalElement()
     }
     delete[] dN_dKsi;
     delete[] dN_dEta;
-}
-
-Surface::Surface(int n)
-{
-    this->n = n;
-
-    N = new double* [n * n];
-
-    for (int i = 0; i < n * n; i++) {
-        N[i] = new double[4] {};
-    }
-}
-
-Surface::~Surface()
-{
-    for (int i = 0; i < n * n; i++) {
-        delete[] N[i];
-    }
-    delete[] N;
 }
 
 void UniversalElement::calculateShapeFunctionDerivatives()
@@ -84,6 +92,91 @@ void UniversalElement::printShapeFunctionDerivatives()
         }
         cout << endl;
     }
+}
+
+void UniversalElement::calculateKsiEtaMatrix_Values()
+{
+    GaussQuadrature tableRow = returnRowOfGaussTable(N);
+
+    //Surface 1
+    for (int i = 0; i < N; i++) {
+        surface[0].ksiEtaMatrix[i][0] = tableRow.xk[i];
+        surface[0].ksiEtaMatrix[i][1] = -1;
+    }
+
+    //Surface 2
+    for (int i = 0; i < N; i++) {
+        surface[1].ksiEtaMatrix[i][0] = 1;
+        surface[1].ksiEtaMatrix[i][1] = tableRow.xk[i];
+    }
+
+    //Surface 3
+    for (int i = 0, j = N - 1; i < N; i++, j--) {
+        surface[2].ksiEtaMatrix[i][0] = tableRow.xk[j];
+        surface[2].ksiEtaMatrix[i][1] = 1;
+    }
+
+    //Surface 4
+    for (int i = 0, j = N - 1; i < N; i++, j--) {
+        surface[3].ksiEtaMatrix[i][0] = -1;
+        surface[3].ksiEtaMatrix[i][1] = tableRow.xk[j];
+    }
+}
+
+void UniversalElement::printKsiEtaMatrix_Values()
+{
+    for (int s = 0; s < 4; s++) {
+        cout << "\nKsi and Eta values for surface " << s + 1 << endl;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < 2; j++) {
+                cout << surface[s].ksiEtaMatrix[i][j] << "   ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+    }
+}
+
+void UniversalElement::calculateMatrixOfN_Values(int surf)
+{
+    GaussQuadrature tableRow = returnRowOfGaussTable(N);
+
+    for (int i = 0; i < N; i++) {
+        surface[surf].Ni[i][0] = N_Function(surface[surf].ksiEtaMatrix[i][0], surface[surf].ksiEtaMatrix[i][1], 0);
+        surface[surf].Ni[i][1] = N_Function(surface[surf].ksiEtaMatrix[i][0], surface[surf].ksiEtaMatrix[i][1], 1);
+        surface[surf].Ni[i][2] = N_Function(surface[surf].ksiEtaMatrix[i][0], surface[surf].ksiEtaMatrix[i][1], 2);
+        surface[surf].Ni[i][3] = N_Function(surface[surf].ksiEtaMatrix[i][0], surface[surf].ksiEtaMatrix[i][1], 3);
+    }
+}
+
+double N_Function(double ksi, double eta, int i)
+{
+    switch (i)
+    {
+    case 0:
+        return 0.25 * (1.0 - ksi) * (1.0 - eta);
+    case 1:
+        return 0.25 * (1.0 + ksi) * (1.0 - eta);
+    case 2:
+        return 0.25 * (1.0 + ksi) * (1.0 + eta);
+    case 3:
+        return 0.25 * (1.0 - ksi) * (1.0 + eta);
+    default:
+        cerr << "Invalid value of i in N function." << endl;
+        return 0.0;
+    }
+}
+
+void UniversalElement::printMatrixOfN_Values(int surf)
+{
+    cout << "\nSurface " << surf +1 << endl;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << surface[surf].Ni[i][j] << "\t";
+        }
+        cout << endl;
+    }
+    cout << endl;
 }
 
 double dN1_dKsi(double eta) {

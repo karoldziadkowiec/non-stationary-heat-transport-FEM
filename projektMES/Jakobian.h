@@ -21,17 +21,20 @@ struct Jakobian
 
     double kt;
     double dV;
+    double dS;
 
     double*** xH_AtPci;
     double*** yH_AtPci;
 
     double*** Hpci;
 
-    double** H;
+    double*** Hbc_AtPci;
+    double*** Hbci;
 
     Jakobian(int N);
     ~Jakobian();
 
+    //Hpc
     void calculateDerivativesAtPci(const UniversalElement& universalElement, const Grid& grid, int elementNumber, int pc);
     void printJakobianMatrix();
     double calculateDetJ();
@@ -43,8 +46,18 @@ struct Jakobian
     void calculateMatrixHForXandYForPci(int pc);
     void calculateMatrixHpci(int pc, int conductivity);
     void printMatrixHpci();
-    void calculateMatrixH();
-    void printMatrixH();
+    void calculateMatrixH(const Grid& grid, int elementNumber);
+    void printMatrixH(const Grid& grid, int elementNumber);
+
+    //Hbc
+    double calculateHbcDetJ(const Grid& grid, int Nx, int Nk);
+    void printHbcDetJ(const Grid& grid, int Nx, int Nk);
+    void calculateMatrixHbciForPci(const UniversalElement& universalElement, int surface);
+    void calculateMatrixHbci(int surface, int alfa, const Grid& grid, int Nx, int Nk);
+    void printMatrixHbci();
+    void calculateMatrixHbc(const Grid& grid, int elementNumber);
+    void printMatrixHbc(const Grid& grid, int elementNumber);
+    void zeroMatrixHbci();
 };
 
 #endif

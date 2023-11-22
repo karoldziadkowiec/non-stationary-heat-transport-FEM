@@ -71,7 +71,8 @@ Jakobian::Jakobian(int N)
 
     Hpci = new double** [N * N];
 
-    H = new double* [N * N];
+    Hbc_AtPci = new double** [4];
+    Hbci = new double** [4];
 
     for (int i = 0; i < N * N; i++) {
         dN_dx[i] = new double[4] {};
@@ -90,8 +91,20 @@ Jakobian::Jakobian(int N)
         for (int j = 0; j < 4; j++) {
             Hpci[i][j] = new double[4] {};
         }
+    }
 
-        H[i] = new double[4] {};
+    for (int i = 0; i < 4; i++) {
+        Hbc_AtPci[i] = new double* [4];
+        for (int j = 0; j < 4; j++) {
+            Hbc_AtPci[i][j] = new double[4] {};
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        Hbci[i] = new double* [4];
+        for (int j = 0; j < 4; j++) {
+            Hbci[i][j] = new double[4] {};
+        }
     }
 }
 
@@ -110,8 +123,6 @@ Jakobian::~Jakobian()
         delete[] yH_AtPci[i];
 
         delete[] Hpci[i];
-
-        delete[] H[i];
     }
     delete[] dN_dx;
     delete[] dN_dy;
@@ -120,8 +131,6 @@ Jakobian::~Jakobian()
     delete[] yH_AtPci;
 
     delete[] Hpci;
-
-    delete[] H;
 }
 
 void Jakobian::calculateShapeFunctionDerivativesForPci(const UniversalElement& universalElement, int pc)
@@ -168,7 +177,7 @@ void Jakobian::calculateMatrixHForXandYForPci(int pc)
 void Jakobian::calculateMatrixHpci(int pc, int conductivity)
 {
     int kt = conductivity; // conductivity
-    dV = calculate1_DetJ(); //area of the integrated element 
+    dV = calculate1_DetJ(); //volume of the integrated element 
 
     for (int i = 0; i < 4; i++)
     {
@@ -192,7 +201,7 @@ void Jakobian::printMatrixHpci()
     }
 }
 
-void Jakobian::calculateMatrixH()
+void Jakobian::calculateMatrixH(const Grid& grid, int elementNumber)
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
@@ -200,26 +209,123 @@ void Jakobian::calculateMatrixH()
     {
         for (int j = 0; j < 4; j++)
         {
-            H[i][j] = 0;
+            grid.elements[elementNumber].H[i][j] = 0;
 
             for (int pc = 0; pc < N * N; pc++)
             {
                 int w1 = pc / N;
                 int w2 = pc % N;
 
-                H[i][j] += Hpci[pc][i][j] * tableRow.wk[w1] * tableRow.wk[w2];
+                grid.elements[elementNumber].H[i][j] += Hpci[pc][i][j] * tableRow.wk[w1] * tableRow.wk[w2];
             }
         }
     }
 }
 
-void Jakobian::printMatrixH()
+void Jakobian::printMatrixH(const Grid& grid, int elementNumber)
 {
     cout << "\nMatrix [H]:" << endl;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            cout << H[i][j] << "   ";
+            cout << grid.elements[elementNumber].H[i][j] << "   ";
         }
         cout << endl;
+    }
+}
+/////////////////////////////////// Hbc //////////////////////////////////////////////
+double Jakobian::calculateHbcDetJ(const Grid& grid, int Nx, int Nk)
+{
+    double L = sqrt(pow((grid.nodes[Nx].x - grid.nodes[Nk].x), 2) + pow((grid.nodes[Nx].y - grid.nodes[Nk].y), 2));
+    double DetJ = L / 2;
+    return DetJ;
+}
+
+void Jakobian::printHbcDetJ(const Grid& grid, int Nx, int Nk)
+{
+    cout << "DetJ for surface = " << calculateHbcDetJ(grid, Nx, Nk) << endl;
+}
+
+void Jakobian::calculateMatrixHbciForPci(const UniversalElement& universalElement, int surface)
+{
+    GaussQuadrature tableRow = returnRowOfGaussTable(N);
+
+    for (int i = 0, n = N - 1; i < N; i++, n--)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            for (int k = 0; k < 4; k++)
+            {
+                if (surface == 0 || surface == 1) {
+                    Hbc_AtPci[surface][j][k] += tableRow.wk[i] * universalElement.surface[surface].Ni[i][j] * universalElement.surface[surface].Ni[i][k];
+                }
+                else {
+                    Hbc_AtPci[surface][j][k] += tableRow.wk[n] * universalElement.surface[surface].Ni[i][j] * universalElement.surface[surface].Ni[i][k];
+                }
+            }
+        }
+    }
+}
+
+void Jakobian::calculateMatrixHbci(int surface, int alfa, const Grid& grid, int Nx, int Nk)
+{
+    int a = alfa; // alfa
+    dS = calculateHbcDetJ(grid, Nx, Nk); // area of the integrated element 
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            Hbci[surface][i][j] = a * Hbc_AtPci[surface][i][j] * dS;
+        }
+    }
+}
+
+void Jakobian::printMatrixHbci()
+{
+    for (int s = 0; s < 4; s++) {
+        cout << "\nHbc" << s + 1 << ":" << endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                cout << Hbci[s][i][j] << "  ";
+            }
+            cout << endl;
+        }
+    }
+}
+
+void Jakobian::calculateMatrixHbc(const Grid& grid, int elementNumber)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            grid.elements[elementNumber].Hbc[i][j] = Hbci[0][i][j] + Hbci[1][i][j] + Hbci[2][i][j] + Hbci[3][i][j];
+        }
+    }
+}
+
+void Jakobian::printMatrixHbc(const Grid& grid, int elementNumber)
+{
+    cout << "\nMatrix [Hbc]:" << endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << grid.elements[elementNumber].Hbc[i][j] << "              ";
+        }
+        cout << endl;
+    }
+}
+
+void Jakobian::zeroMatrixHbci()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            for (int k = 0; k < 4; k++)
+            {
+                Hbc_AtPci[i][j][k] = 0.0;
+                Hbci[i][j][k] = 0.0;
+            }
+        }
     }
 }
