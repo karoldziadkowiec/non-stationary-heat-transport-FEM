@@ -329,3 +329,42 @@ void Jakobian::zeroMatrixHbci()
         }
     }
 }
+
+///////////////////////// Vector P ////////////////////////////////
+void Jakobian::zeroVectorP(const Grid& grid, int elementNumber)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        grid.elements[elementNumber].P[i] = 0.0;
+    }
+}
+
+void Jakobian::calculateVectorP_ForPci(const Grid& grid, const UniversalElement& universalElement, int surface, int elementNumber, int tot, int alfa, int Nx, int Nk)
+{
+    int a = alfa; // alfa
+    dS = calculateHbcDetJ(grid, Nx, Nk); // area of the integrated element
+    int t = tot; // ambient temperature
+    GaussQuadrature tableRow = returnRowOfGaussTable(N);
+
+    for (int i = 0, n = N - 1; i < N; i++, n--)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (surface == 0 || surface == 1) {
+                grid.elements[elementNumber].P[j] += a * (tableRow.wk[i] * universalElement.surface[surface].Ni[i][j] * t) * dS;
+            }
+            else {
+                grid.elements[elementNumber].P[j] += a * (tableRow.wk[n] * universalElement.surface[surface].Ni[i][j] * t) * dS;
+            }
+        }
+    }
+}
+
+void Jakobian::printVectorP(const Grid& grid, int elementNumber)
+{
+    cout << "\nVector {P}:" << endl;
+    for (int i = 0; i < 4; i++) {
+        cout << grid.elements[elementNumber].P[i] << "   ";
+    }
+    cout << endl;
+}

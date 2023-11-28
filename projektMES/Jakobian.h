@@ -58,6 +58,11 @@ struct Jakobian
     void calculateMatrixHbc(const Grid& grid, int elementNumber);
     void printMatrixHbc(const Grid& grid, int elementNumber);
     void zeroMatrixHbci();
+
+    //Vector P
+    void zeroVectorP(const Grid& grid, int elementNumber);
+    void calculateVectorP_ForPci(const Grid& grid, const UniversalElement& universalElement, int surface, int elementNumber, int tot, int alfa, int Nx, int Nk);
+    void printVectorP(const Grid& grid, int elementNumber);
 };
 
 #endif

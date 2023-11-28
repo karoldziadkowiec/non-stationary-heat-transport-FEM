@@ -16,6 +16,7 @@ struct Element
     int id[4];
     double H[4][4];
     double Hbc[4][4];
+    double P[4];
 };
 
 struct Grid

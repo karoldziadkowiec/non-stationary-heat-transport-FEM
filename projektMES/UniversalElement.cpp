@@ -94,6 +94,8 @@ void UniversalElement::printShapeFunctionDerivatives()
     }
 }
 
+/////////////////////////// Hbc //////////////////////////////
+
 void UniversalElement::calculateKsiEtaMatrix_Values()
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
