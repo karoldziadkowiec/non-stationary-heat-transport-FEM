@@ -330,6 +330,17 @@ void Jakobian::zeroMatrixHbci()
     }
 }
 
+void Jakobian::sumMatrixH_Hbc(const Grid& grid, int elementNumber)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            grid.elements[elementNumber].H[i][j] += grid.elements[elementNumber].Hbc[i][j];
+        }
+    }
+}
+
 ///////////////////////// Vector P ////////////////////////////////
 void Jakobian::zeroVectorP(const Grid& grid, int elementNumber)
 {
