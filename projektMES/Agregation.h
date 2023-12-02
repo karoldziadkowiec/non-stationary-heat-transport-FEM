@@ -12,6 +12,7 @@ using namespace std;
 struct SoE {
 	int n;
 	double** HG;
+	double** CG;
 	double* P;
 	double* t;
 

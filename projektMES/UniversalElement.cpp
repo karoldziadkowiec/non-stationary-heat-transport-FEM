@@ -40,6 +40,12 @@ UniversalElement::UniversalElement(int N)
             }
         }
     }
+
+    Ni_MatrixC = new double* [N * N];
+
+    for (int i = 0; i < N * N; i++) {
+        Ni_MatrixC[i] = new double[4] {};
+    }
 }
 
 UniversalElement::~UniversalElement()
@@ -150,6 +156,8 @@ void UniversalElement::calculateMatrixOfN_Values(int surf)
         surface[surf].Ni[i][3] = N_Function(surface[surf].ksiEtaMatrix[i][0], surface[surf].ksiEtaMatrix[i][1], 3);
     }
 }
+
+
 
 double N_Function(double ksi, double eta, int i)
 {

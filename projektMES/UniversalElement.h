@@ -22,6 +22,8 @@ struct UniversalElement
     
     Surface surface[4];
 
+    double** Ni_MatrixC;
+
     UniversalElement(int N);
     ~UniversalElement();
 
@@ -32,6 +34,8 @@ struct UniversalElement
     void printKsiEtaMatrix_Values();
     void calculateMatrixOfN_Values(int surf);
     void printMatrixOfN_Values(int surf);
+
+
 };
 
 double dN1_dKsi(double eta);

@@ -31,6 +31,8 @@ struct Jakobian
     double*** Hbc_AtPci;
     double*** Hbci;
 
+    double*** Cpci;
+
     Jakobian(int N);
     ~Jakobian();
 
@@ -64,6 +66,8 @@ struct Jakobian
     void zeroVectorP(const Grid& grid, int elementNumber);
     void calculateVectorP_ForPci(const Grid& grid, const UniversalElement& universalElement, int surface, int elementNumber, int tot, int alfa, int Nx, int Nk);
     void printVectorP(const Grid& grid, int elementNumber);
+
+
 };
 
 #endif

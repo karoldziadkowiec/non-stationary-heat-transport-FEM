@@ -5,25 +5,25 @@
 
 void Jakobian::calculateDerivativesAtPci(const UniversalElement& universalElement, const Grid& grid, int elementNumber, int pc)
 {
-    dx_dKsi = universalElement.dN_dKsi[pc][0] * grid.nodes[grid.elements[elementNumber].id[0] - 1].x +
-        universalElement.dN_dKsi[pc][1] * grid.nodes[grid.elements[elementNumber].id[1] - 1].x +
-        universalElement.dN_dKsi[pc][2] * grid.nodes[grid.elements[elementNumber].id[2] - 1].x +
-        universalElement.dN_dKsi[pc][3] * grid.nodes[grid.elements[elementNumber].id[3] - 1].x;
+    dx_dKsi = universalElement.dN_dKsi[pc][0] * grid.nodes[grid.elements[elementNumber].id[2] - 1].x +
+        universalElement.dN_dKsi[pc][1] * grid.nodes[grid.elements[elementNumber].id[3] - 1].x +
+        universalElement.dN_dKsi[pc][2] * grid.nodes[grid.elements[elementNumber].id[0] - 1].x +
+        universalElement.dN_dKsi[pc][3] * grid.nodes[grid.elements[elementNumber].id[1] - 1].x;
 
-    dy_dKsi = universalElement.dN_dKsi[pc][0] * grid.nodes[grid.elements[elementNumber].id[0] - 1].y +
-        universalElement.dN_dKsi[pc][1] * grid.nodes[grid.elements[elementNumber].id[1] - 1].y +
-        universalElement.dN_dKsi[pc][2] * grid.nodes[grid.elements[elementNumber].id[2] - 1].y +
-        universalElement.dN_dKsi[pc][3] * grid.nodes[grid.elements[elementNumber].id[3] - 1].y;
+    dy_dKsi = universalElement.dN_dKsi[pc][0] * grid.nodes[grid.elements[elementNumber].id[2] - 1].y +
+        universalElement.dN_dKsi[pc][1] * grid.nodes[grid.elements[elementNumber].id[3] - 1].y +
+        universalElement.dN_dKsi[pc][2] * grid.nodes[grid.elements[elementNumber].id[0] - 1].y +
+        universalElement.dN_dKsi[pc][3] * grid.nodes[grid.elements[elementNumber].id[1] - 1].y;
 
-    dx_dEta = universalElement.dN_dEta[pc][0] * grid.nodes[grid.elements[elementNumber].id[0] - 1].x +
-        universalElement.dN_dEta[pc][1] * grid.nodes[grid.elements[elementNumber].id[1] - 1].x +
-        universalElement.dN_dEta[pc][2] * grid.nodes[grid.elements[elementNumber].id[2] - 1].x +
-        universalElement.dN_dEta[pc][3] * grid.nodes[grid.elements[elementNumber].id[3] - 1].x;
+    dx_dEta = universalElement.dN_dEta[pc][0] * grid.nodes[grid.elements[elementNumber].id[2] - 1].x +
+        universalElement.dN_dEta[pc][1] * grid.nodes[grid.elements[elementNumber].id[3] - 1].x +
+        universalElement.dN_dEta[pc][2] * grid.nodes[grid.elements[elementNumber].id[0] - 1].x +
+        universalElement.dN_dEta[pc][3] * grid.nodes[grid.elements[elementNumber].id[1] - 1].x;
 
-    dy_dEta = universalElement.dN_dEta[pc][0] * grid.nodes[grid.elements[elementNumber].id[0] - 1].y +
-        universalElement.dN_dEta[pc][1] * grid.nodes[grid.elements[elementNumber].id[1] - 1].y +
-        universalElement.dN_dEta[pc][2] * grid.nodes[grid.elements[elementNumber].id[2] - 1].y +
-        universalElement.dN_dEta[pc][3] * grid.nodes[grid.elements[elementNumber].id[3] - 1].y;
+    dy_dEta = universalElement.dN_dEta[pc][0] * grid.nodes[grid.elements[elementNumber].id[2] - 1].y +
+        universalElement.dN_dEta[pc][1] * grid.nodes[grid.elements[elementNumber].id[3] - 1].y +
+        universalElement.dN_dEta[pc][2] * grid.nodes[grid.elements[elementNumber].id[0] - 1].y +
+        universalElement.dN_dEta[pc][3] * grid.nodes[grid.elements[elementNumber].id[1] - 1].y;
 }
 
 void Jakobian::printJakobianMatrix()
@@ -35,7 +35,7 @@ void Jakobian::printJakobianMatrix()
 
 double Jakobian::calculateDetJ()
 {
-    double detJ = (dy_dEta * dx_dKsi) - (dy_dKsi * dx_dEta);
+    double detJ = (dx_dKsi * dy_dEta) - (dy_dKsi * dx_dEta);
     return detJ;
 }
 
@@ -74,6 +74,8 @@ Jakobian::Jakobian(int N)
     Hbc_AtPci = new double** [4];
     Hbci = new double** [4];
 
+    Cpci = new double** [N * N];
+
     for (int i = 0; i < N * N; i++) {
         dN_dx[i] = new double[4] {};
         dN_dy[i] = new double[4] {};
@@ -87,9 +89,11 @@ Jakobian::Jakobian(int N)
         }
 
         Hpci[i] = new double* [N * N];
+        Cpci[i] = new double* [N * N];
 
         for (int j = 0; j < 4; j++) {
             Hpci[i][j] = new double[4] {};
+            Cpci[i][j] = new double[4] {};
         }
     }
 
@@ -379,3 +383,4 @@ void Jakobian::printVectorP(const Grid& grid, int elementNumber)
     }
     cout << endl;
 }
+

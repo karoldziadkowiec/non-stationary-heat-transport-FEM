@@ -50,8 +50,8 @@ int main()
     //lab6_Test1_4_4();
     //lab6_Test2_4_4_MixGrid();
     //lab7();
-    lab7_Test1_4_4();
-    //lab7_Test2_4_4_MixGrid();
+    //lab7_Test1_4_4();
+    lab7_Test2_4_4_MixGrid();
 
     return 0;
 }
@@ -833,6 +833,7 @@ void lab6_Test2_4_4_MixGrid()
     }
 }
 
+//LAB7
 void lab7()
 {
     cout << "\nTEST" << endl;
@@ -1171,3 +1172,4 @@ void lab7_Test2_4_4_MixGrid()
     soe.solveSoE();
     soe.printSoE();
 }
+

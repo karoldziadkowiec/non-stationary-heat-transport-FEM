@@ -8,12 +8,15 @@ SoE::SoE(int n)
 	this->n = n;
 
 	HG = new double* [n];
+	CG = new double* [n];
 	for (int i = 0; i < n; i++) {
 		HG[i] = new double[n] {};
+		CG[i] = new double[n] {};
 	}
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			HG[i][j] = 0.0;
+			CG[i][j] = 0.0;
 		}
 	}
 
@@ -29,8 +32,10 @@ SoE::~SoE()
 {
 	for (int i = 0; i < n; i++) {
 		delete[] HG[i];
+		delete[] CG[i];
 	}
 	delete[] HG;
+	delete[] CG;
 	delete[] P;
 }
 
