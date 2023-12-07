@@ -157,7 +157,33 @@ void UniversalElement::calculateMatrixOfN_Values(int surf)
     }
 }
 
+// Calculate C Matrix
+void UniversalElement::calculateMatrixOfN_ValuesMatrixC()
+{
+    GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            int pc = i * N + j;
+
+            Ni_MatrixC[pc][0] = N_Function(tableRow.xk[j], tableRow.xk[i], 0);
+            Ni_MatrixC[pc][1] = N_Function(tableRow.xk[j], tableRow.xk[i], 1);
+            Ni_MatrixC[pc][2] = N_Function(tableRow.xk[j], tableRow.xk[i], 2);
+            Ni_MatrixC[pc][3] = N_Function(tableRow.xk[j], tableRow.xk[i], 3);
+        }
+    }
+}
+
+void UniversalElement::printMatrixOfN_ValuesMatrixC()
+{
+    cout << "\nNi values for Matrix C:" << endl;
+    for (int i = 0; i < N * N; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << Ni_MatrixC[i][j] << "  ";
+        }
+        cout << endl;
+    }
+}
 
 double N_Function(double ksi, double eta, int i)
 {

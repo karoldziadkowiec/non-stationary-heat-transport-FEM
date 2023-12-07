@@ -36,7 +36,7 @@ struct Jakobian
     Jakobian(int N);
     ~Jakobian();
 
-    //Hpc
+    //H
     void calculateDerivativesAtPci(const UniversalElement& universalElement, const Grid& grid, int elementNumber, int pc);
     void printJakobianMatrix();
     double calculateDetJ();
@@ -67,7 +67,11 @@ struct Jakobian
     void calculateVectorP_ForPci(const Grid& grid, const UniversalElement& universalElement, int surface, int elementNumber, int tot, int alfa, int Nx, int Nk);
     void printVectorP(const Grid& grid, int elementNumber);
 
-
+    //C
+    void calculateMatrixCpci(const UniversalElement& universalElement, int pc, int specificHeat, int density);
+    void printMatrixCpci();
+    void calculateMatrixC(const Grid& grid, int elementNumber);
+    void printMatrixC(const Grid& grid, int elementNumber);
 };
 
 #endif

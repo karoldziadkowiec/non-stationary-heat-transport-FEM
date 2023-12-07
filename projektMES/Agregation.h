@@ -13,16 +13,31 @@ struct SoE {
 	int n;
 	double** HG;
 	double** CG;
-	double* P;
+	double* PG;
 	double* t;
 
 	SoE(int n);
 	~SoE();
 
-	void aggregateMatrixH(const Grid& grid, int elementNumber);
-	void printAggregatedMatrixH();
-	void aggregateVectorP(const Grid& grid, int elementNumber);
-	void printAggregatedVectorP();
+	void aggregateMatrixHG(const Grid& grid, int elementNumber);
+	void printAggregatedMatrixHG();
+
+	void aggregateVectorPG(const Grid& grid, int elementNumber);
+	void printAggregatedVectorPG();
+
+	void aggregateMatrixCG(const Grid& grid, int elementNumber);
+	void printAggregatedMatrixCG();
+
+	void calculateMatrixHplusC_dT(const Grid& grid, int elementsNumber, int dt);
+	void printMatrixHplusC_dT(const Grid& grid, int elementsNumber);
+	void zeroAggregatedMatrixH();
+	void aggregateMatrixHplusC_dT(const Grid& grid, int elementsNumber);
+	void calculateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber, int dt, int t);
+	void printMatrixCt0_dTplusP(const Grid& grid, int elementsNumber);
+	void zeroAggregatedMatrixP();
+	void aggregateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber);
+	void displayMinMaxTemperature(int dt);
+
 	void solveSoE();
 	void printSoE();
 };

@@ -384,3 +384,63 @@ void Jakobian::printVectorP(const Grid& grid, int elementNumber)
     cout << endl;
 }
 
+// Matrix C
+void Jakobian::calculateMatrixCpci(const UniversalElement& universalElement, int pc, int specificHeat, int density)
+{
+    int c = specificHeat; // specific heat
+    int ro = density; // density
+    dV = calculate1_DetJ(); //volume of the integrated element 
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            Cpci[pc][i][j] = c * ro * (universalElement.Ni_MatrixC[pc][i] * universalElement.Ni_MatrixC[pc][j]) * dV;
+        }
+    }
+}
+
+void Jakobian::printMatrixCpci()
+{
+    for (int pc = 0; pc < N * N; pc++) {
+        cout << "\nCpc" << pc + 1 << ":" << endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                cout << Cpci[pc][i][j] << "  ";
+            }
+            cout << endl;
+        }
+    }
+}
+
+void Jakobian::calculateMatrixC(const Grid& grid, int elementNumber)
+{
+    GaussQuadrature tableRow = returnRowOfGaussTable(N);
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            grid.elements[elementNumber].C[i][j] = 0;
+
+            for (int pc = 0; pc < N * N; pc++)
+            {
+                int w1 = pc / N;
+                int w2 = pc % N;
+
+                grid.elements[elementNumber].C[i][j] += Cpci[pc][i][j] * tableRow.wk[w1] * tableRow.wk[w2];
+            }
+        }
+    }
+}
+
+void Jakobian::printMatrixC(const Grid& grid, int elementNumber)
+{
+    cout << "\nMatrix [C]:" << endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << grid.elements[elementNumber].C[i][j] << "   ";
+        }
+        cout << endl;
+    }
+}

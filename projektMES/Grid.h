@@ -18,6 +18,9 @@ struct Element
     double Hbc[4][4];
     double P[4];
     double C[4][4];
+
+    double HplusC_dT[4][4];
+    double Ct0_dTplusP[4];
 };
 
 struct Grid

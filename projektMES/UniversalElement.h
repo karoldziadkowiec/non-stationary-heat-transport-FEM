@@ -35,7 +35,8 @@ struct UniversalElement
     void calculateMatrixOfN_Values(int surf);
     void printMatrixOfN_Values(int surf);
 
-
+    void calculateMatrixOfN_ValuesMatrixC();
+    void printMatrixOfN_ValuesMatrixC();
 };
 
 double dN1_dKsi(double eta);
