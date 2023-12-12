@@ -1195,6 +1195,7 @@ void lab8()
     int ro = 7800; // density
     int dt = 50; // simulationStepTime - deltaTau
     int t0 = 100; // initialTemp - t0
+    int stepTime = 500; // step time
 
     testGrid.elements = new Element[1];
     testGrid.elements[0].id[0] = 1;
@@ -1320,22 +1321,22 @@ void lab8()
 
     soe.printAggregatedMatrixCG();
 
-    //for (int time = globalData.simulationStepTime; time <= globalData.simulationTime; time += 50) {
-        //dt = time;
-    soe.calculateMatrixHplusC_dT(testGrid, globalData.elementsNumber, dt);
-    soe.printMatrixHplusC_dT(testGrid, globalData.elementsNumber);
-    soe.zeroAggregatedMatrixH();
-    soe.aggregateMatrixHplusC_dT(testGrid, globalData.elementsNumber);
-    soe.printAggregatedMatrixHG();
-    soe.calculateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber, dt, t0);
-    soe.printMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
-    soe.zeroAggregatedMatrixP();
-    soe.aggregateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
-    soe.printAggregatedVectorPG();
-    soe.solveSoE();
-    soe.printSoE();
-    soe.displayMinMaxTemperature(dt);
-    //}
+    soe.initialStartTemperature(t0);
+    for (int time = dt; time <= stepTime; time += dt) {
+        soe.calculateMatrixHplusC_dT(testGrid, globalData.elementsNumber, dt);
+        soe.printMatrixHplusC_dT(testGrid, globalData.elementsNumber);
+        soe.zeroAggregatedMatrixH();
+        soe.aggregateMatrixHplusC_dT(testGrid, globalData.elementsNumber);
+        soe.printAggregatedMatrixHG();
+        soe.calculateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber, dt);
+        soe.printMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
+        soe.zeroAggregatedMatrixP();
+        soe.aggregateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
+        soe.printAggregatedVectorPG();
+        soe.solveSoE();
+        soe.printSoE();
+        soe.displayMinMaxTemperature(time);
+    }
 }
 
 void lab8_Test1_4_4()
@@ -1456,27 +1457,27 @@ void lab8_Test1_4_4()
 
     soe.printAggregatedMatrixCG();
 
-    //for (int time = globalData.simulationStepTime; time <= globalData.simulationTime; time += 50) {
-        //dt = time;
-    soe.calculateMatrixHplusC_dT(testGrid, globalData.elementsNumber, dt);
-    soe.printMatrixHplusC_dT(testGrid, globalData.elementsNumber);
-    soe.zeroAggregatedMatrixH();
-    soe.aggregateMatrixHplusC_dT(testGrid, globalData.elementsNumber);
-    soe.printAggregatedMatrixHG();
-    soe.calculateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber, dt, t0);
-    soe.printMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
-    soe.zeroAggregatedMatrixP();
-    soe.aggregateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
-    soe.printAggregatedVectorPG();
-    soe.solveSoE();
-    soe.printSoE();
-    soe.displayMinMaxTemperature(dt);
-    //}
+    soe.initialStartTemperature(t0);
+    for (int time = globalData.simulationStepTime; time <= globalData.simulationTime; time += globalData.simulationStepTime) {
+        soe.calculateMatrixHplusC_dT(testGrid, globalData.elementsNumber, dt);
+        soe.printMatrixHplusC_dT(testGrid, globalData.elementsNumber);
+        soe.zeroAggregatedMatrixH();
+        soe.aggregateMatrixHplusC_dT(testGrid, globalData.elementsNumber);
+        soe.printAggregatedMatrixHG();
+        soe.calculateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber, dt);
+        soe.printMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
+        soe.zeroAggregatedMatrixP();
+        soe.aggregateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
+        soe.printAggregatedVectorPG();
+        soe.solveSoE();
+        soe.printSoE();
+        soe.displayMinMaxTemperature(time);
+    }
 }
 
 void lab8_Test2_4_4_MixGrid()
 {
-    cout << "\n Test1_4_4_MixGrid.txt" << endl;
+    cout << "\n Test2_4_4_MixGrid.txt" << endl;
 
     Grid testGrid;
     GlobalData globalData;
@@ -1592,20 +1593,20 @@ void lab8_Test2_4_4_MixGrid()
 
     soe.printAggregatedMatrixCG();
 
-    //for (int time = globalData.simulationStepTime; time <= globalData.simulationTime; time += 50) {
-        //dt = time;
+    soe.initialStartTemperature(t0);
+    for (int time = globalData.simulationStepTime; time <= globalData.simulationTime; time += globalData.simulationStepTime) {
         soe.calculateMatrixHplusC_dT(testGrid, globalData.elementsNumber, dt);
-        soe.printMatrixHplusC_dT(testGrid, globalData.elementsNumber);
+        //soe.printMatrixHplusC_dT(testGrid, globalData.elementsNumber);
         soe.zeroAggregatedMatrixH();
         soe.aggregateMatrixHplusC_dT(testGrid, globalData.elementsNumber);
-        soe.printAggregatedMatrixHG();
-        soe.calculateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber, dt, t0);
-        soe.printMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
+        //soe.printAggregatedMatrixHG();
+        soe.calculateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber, dt);
+        //soe.printMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
         soe.zeroAggregatedMatrixP();
         soe.aggregateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
-        soe.printAggregatedVectorPG();
+        //soe.printAggregatedVectorPG();
         soe.solveSoE();
         soe.printSoE();
-        soe.displayMinMaxTemperature(dt);
-    //}
+        soe.displayMinMaxTemperature(time);
+    }
 }

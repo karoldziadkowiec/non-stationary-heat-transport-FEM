@@ -32,11 +32,12 @@ struct SoE {
 	void printMatrixHplusC_dT(const Grid& grid, int elementsNumber);
 	void zeroAggregatedMatrixH();
 	void aggregateMatrixHplusC_dT(const Grid& grid, int elementsNumber);
-	void calculateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber, int dt, int t);
+	void calculateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber, int dt);
 	void printMatrixCt0_dTplusP(const Grid& grid, int elementsNumber);
 	void zeroAggregatedMatrixP();
 	void aggregateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber);
-	void displayMinMaxTemperature(int dt);
+	void displayMinMaxTemperature(int time);
+	void initialStartTemperature(int t0);
 
 	void solveSoE();
 	void printSoE();

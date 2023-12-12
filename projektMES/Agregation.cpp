@@ -183,18 +183,27 @@ void SoE::aggregateMatrixHplusC_dT(const Grid& grid, int elementsNumber)
 	}
 }
 
-void SoE::calculateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber, int dt, int t)
+void SoE::calculateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber, int dt)
 {
 	int deltaTau = dt;
-	int t0 = t;
 
 	for (int elNumber = 0; elNumber < elementsNumber; elNumber++) {
 		for (int i = 0; i < 4; i++) {
 			grid.elements[elNumber].Ct0_dTplusP[i] = 0.0;
 			for (int j = 0; j < 4; j++) {
-				grid.elements[elNumber].Ct0_dTplusP[i] += (grid.elements[elNumber].C[i][j]/deltaTau) * t0;
+				if (j == 0) {
+					grid.elements[elNumber].Ct0_dTplusP[i] += (grid.elements[elNumber].C[i][j] / deltaTau) * t[grid.elements[elNumber].id[2] - 1];
+				}
+				if (j == 1) {
+					grid.elements[elNumber].Ct0_dTplusP[i] += (grid.elements[elNumber].C[i][j] / deltaTau) * t[grid.elements[elNumber].id[3] - 1];
+				}
+				if (j == 2) {
+					grid.elements[elNumber].Ct0_dTplusP[i] += (grid.elements[elNumber].C[i][j] / deltaTau) * t[grid.elements[elNumber].id[0] - 1];
+				}
+				
 
 				if (j == 3) {
+					grid.elements[elNumber].Ct0_dTplusP[i] += (grid.elements[elNumber].C[i][j] / deltaTau) * t[grid.elements[elNumber].id[1] - 1];
 					grid.elements[elNumber].Ct0_dTplusP[i] += grid.elements[elNumber].P[i];
 				}
 			}
@@ -227,6 +236,13 @@ void SoE::aggregateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber)
 		PG[grid.elements[elementNumber].id[3] - 1] += grid.elements[elementNumber].Ct0_dTplusP[1];
 		PG[grid.elements[elementNumber].id[0] - 1] += grid.elements[elementNumber].Ct0_dTplusP[2];
 		PG[grid.elements[elementNumber].id[1] - 1] += grid.elements[elementNumber].Ct0_dTplusP[3];
+	}
+}
+
+void SoE::initialStartTemperature(int t0)
+{
+	for (int i = 0; i < n; i++) {
+		t[i] = t0;
 	}
 }
 
@@ -269,11 +285,10 @@ void SoE::printSoE()
 	cout << endl;
 }
 
-void SoE::displayMinMaxTemperature(int dt)
+void SoE::displayMinMaxTemperature(int time)
 {
 	double maxTemp = t[0];
 	double minTemp = t[0];
-	int time = dt;
 
 	for (int i = 0; i < n; i++) {
 		if (t[i] > maxTemp)
