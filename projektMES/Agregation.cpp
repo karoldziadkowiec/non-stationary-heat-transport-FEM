@@ -200,8 +200,6 @@ void SoE::calculateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber, int d
 				if (j == 2) {
 					grid.elements[elNumber].Ct0_dTplusP[i] += (grid.elements[elNumber].C[i][j] / deltaTau) * t[grid.elements[elNumber].id[0] - 1];
 				}
-				
-
 				if (j == 3) {
 					grid.elements[elNumber].Ct0_dTplusP[i] += (grid.elements[elNumber].C[i][j] / deltaTau) * t[grid.elements[elNumber].id[1] - 1];
 					grid.elements[elNumber].Ct0_dTplusP[i] += grid.elements[elNumber].P[i];
@@ -280,7 +278,7 @@ void SoE::printSoE()
 {
 	cout << "\nTemperature {t} n x 1:" << endl;
 	for (int i = 0; i < n; i++) {
-		cout << t[i] << "  ";
+		cout << t[i] << " ";
 	}
 	cout << endl;
 }

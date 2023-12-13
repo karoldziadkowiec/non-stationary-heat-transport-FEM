@@ -120,7 +120,7 @@ void readDataFromFile(const string& filename, GlobalData& globalData, Grid& grid
 
                     if (!(file >> comma) || comma != ',')
                     {
-                        cerr << "Error reading separator at line " << (i + 1) << endl;
+                        //cerr << "Error reading separator at line " << (i + 1) << endl;
                         return;
                     }
                 }
