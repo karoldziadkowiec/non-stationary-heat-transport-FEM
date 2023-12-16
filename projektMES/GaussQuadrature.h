@@ -5,9 +5,9 @@ using namespace std;
 
 struct GaussQuadrature
 {
-    int* k; // gaussian point index
-    double* xk; // integration point
-    double* wk; // weight of the integration point
+    int* k; // index wiersza
+    double* xk; // punkt ca³kowania
+    double* wk; // waga
 };
 
 GaussQuadrature returnRowOfGaussTable(int N);

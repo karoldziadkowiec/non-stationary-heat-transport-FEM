@@ -6,7 +6,7 @@
 
 #include "GaussQuadrature.h"
 
-GaussQuadrature returnRowOfGaussTable(int N)
+GaussQuadrature returnRowOfGaussTable(int N) // Tabela kwadratury Gaussa zawieraj¹ca info o pc oraz wagach
 {
     GaussQuadrature tableRow;
 

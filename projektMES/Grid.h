@@ -19,8 +19,9 @@ struct Element
     double P[4];
     double C[4][4];
 
-    double HplusC_dT[4][4];
-    double Ct0_dTplusP[4];
+    //Dla uk³adu równañ w czasie
+    double HplusC_dT[4][4]; // H + (C/dT)
+    double Ct0_dTplusP[4]; // (C/dT) *{t0} + P
 };
 
 struct Grid

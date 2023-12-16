@@ -39,6 +39,9 @@ SoE::~SoE()
 	delete[] PG;
 }
 
+////////////// HG //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Agregacja macierzy H dla konkretnego elementu
 void SoE::aggregateMatrixHG(const Grid& grid, int elementNumber)
 {
 	HG[grid.elements[elementNumber].id[2] - 1][grid.elements[elementNumber].id[2] - 1] += grid.elements[elementNumber].H[0][0];
@@ -73,6 +76,9 @@ void SoE::printAggregatedMatrixHG()
 	}
 }
 
+////////////// Vector P //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Agregacja wektora P dla konkretnego elementu
 void SoE::aggregateVectorPG(const Grid& grid, int elementNumber)
 {
 	PG[grid.elements[elementNumber].id[2] - 1] += grid.elements[elementNumber].P[0];
@@ -90,6 +96,9 @@ void SoE::printAggregatedVectorPG()
 	cout << endl;
 }
 
+////////////// C //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Agregacja macierzy C dla konkretnego elementu
 void SoE::aggregateMatrixCG(const Grid& grid, int elementNumber)
 {
 	CG[grid.elements[elementNumber].id[2] - 1][grid.elements[elementNumber].id[2] - 1] += grid.elements[elementNumber].C[0][0];
@@ -124,7 +133,9 @@ void SoE::printAggregatedMatrixCG()
 	}
 }
 
-void SoE::calculateMatrixHplusC_dT(const Grid& grid, int elementsNumber, int dt)
+////////////// H + (C/dT) //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void SoE::calculateMatrixHplusC_dT(const Grid& grid, int elementsNumber, int dt) // Obliczenie macierzy H + (C/dT) dla wszystkich elementów
 {
 	int deltaTau = dt;
 	for (int elNumber = 0; elNumber < elementsNumber; elNumber++) {
@@ -158,7 +169,7 @@ void SoE::zeroAggregatedMatrixH()
 	}
 }
 
-void SoE::aggregateMatrixHplusC_dT(const Grid& grid, int elementsNumber)
+void SoE::aggregateMatrixHplusC_dT(const Grid& grid, int elementsNumber) // Agregacja macierzy H + (C/dT) dla wszystkich elementów
 {
 	for (int elementNumber = 0; elementNumber < elementsNumber; elementNumber++) {
 		HG[grid.elements[elementNumber].id[2] - 1][grid.elements[elementNumber].id[2] - 1] += grid.elements[elementNumber].HplusC_dT[0][0];
@@ -183,7 +194,9 @@ void SoE::aggregateMatrixHplusC_dT(const Grid& grid, int elementsNumber)
 	}
 }
 
-void SoE::calculateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber, int dt)
+////////////// (C/dT) *{t0} + P /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void SoE::calculateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber, int dt) // Obliczenie wektora (C/dT) *{t0} + P dla wszystkich elementów
 {
 	int deltaTau = dt;
 
@@ -227,7 +240,7 @@ void SoE::zeroAggregatedMatrixP()
 	}
 }
 
-void SoE::aggregateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber)
+void SoE::aggregateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber) // Agregacja wektora (C/dT) *{t0} + P dla wszystkich elementów
 {
 	for (int elementNumber = 0; elementNumber < elementsNumber; elementNumber++) {
 		PG[grid.elements[elementNumber].id[2] - 1] += grid.elements[elementNumber].Ct0_dTplusP[0];
@@ -237,18 +250,16 @@ void SoE::aggregateMatrixCt0_dTplusP(const Grid& grid, int elementsNumber)
 	}
 }
 
-void SoE::initialStartTemperature(int t0)
+void SoE::initialStartTemperature(int t0) // Inicjalizacja startowej temperatury w czasie 0sek
 {
 	for (int i = 0; i < n; i++) {
 		t[i] = t0;
 	}
 }
 
-void SoE::solveSoE()
+void SoE::solveSoE() // Rozwi¹zywanie uk³adu równañ korzystaj¹c z Eliminacji Gaussa
 {
-	// System of equations using the Gaussian elimination method
-	
-	// Forward Elimination (Eliminacja do przodu)
+	// Eliminacja do przodu
 	for (int i = 0; i < n - 1; i++) {
 		if (PG[i] == 0) {
 			cout << "Error: Value '0' is on the diagonal of the matrix!" << endl;
@@ -264,7 +275,7 @@ void SoE::solveSoE()
 		}
 	}
 
-	// Back Substitution (Substytucja wsteczna)
+	// Substytucja wsteczna
 	for (int i = n - 1; i >= 0; i--) {
 		double sum = 0.0;
 		for (int j = i + 1; j < n; j++) {
@@ -283,7 +294,7 @@ void SoE::printSoE()
 	cout << endl;
 }
 
-void SoE::displayMinMaxTemperature(int time)
+void SoE::displayMinMaxTemperature(int time) // Wyœwietlenie max oraz min Tempreatury w zadanym czasie
 {
 	double maxTemp = t[0];
 	double minTemp = t[0];

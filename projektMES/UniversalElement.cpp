@@ -58,9 +58,11 @@ UniversalElement::~UniversalElement()
     delete[] dN_dEta;
 }
 
-void UniversalElement::calculateShapeFunctionDerivatives()
+/////////////////////////// H /////////////////////////////////////////////////////////////////////////////////////////////
+
+void UniversalElement::calculateShapeFunctionDerivatives() // Pochodne funkcji kszta³tu dN/Kdsi oraz dN/dEta
 {
-    GaussQuadrature tableRow = returnRowOfGaussTable(N);
+    GaussQuadrature tableRow = returnRowOfGaussTable(N); // Zwracanie wiersza zawieraj¹cego pc oraz wagi z tabeli kwadratury Gaussa w zale¿noœci od N
 
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -81,7 +83,7 @@ void UniversalElement::calculateShapeFunctionDerivatives()
     }
 }
 
-void UniversalElement::printShapeFunctionDerivatives()
+void UniversalElement::printShapeFunctionDerivatives() // Wypisanie pochodnych funkcji kszta³tu dN/Kdsi oraz dN/dEta
 {
     cout << "\ndNi/dKsi:" << endl;
     for (int pc = 0; pc < N * N; pc++) {
@@ -100,9 +102,9 @@ void UniversalElement::printShapeFunctionDerivatives()
     }
 }
 
-/////////////////////////// Hbc //////////////////////////////
+/////////////////////////// Hbc /////////////////////////////////////////////////////////////////////////////////////////////
 
-void UniversalElement::calculateKsiEtaMatrix_Values()
+void UniversalElement::calculateKsiEtaMatrix_Values() // Obliczenie Ksi oraz Eta dla funkcji kszat³tu  
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
@@ -145,7 +147,7 @@ void UniversalElement::printKsiEtaMatrix_Values()
     }
 }
 
-void UniversalElement::calculateMatrixOfN_Values(int surf)
+void UniversalElement::calculateMatrixOfN_Values(int surf) // Obliczanie funkcji kszta³tu dla konkrtnej œciany
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
@@ -157,8 +159,9 @@ void UniversalElement::calculateMatrixOfN_Values(int surf)
     }
 }
 
-// Calculate C Matrix
-void UniversalElement::calculateMatrixOfN_ValuesMatrixC()
+/////////////////////////// C ///////////////////////////////////////////////////////////////////////////////////////////////
+
+void UniversalElement::calculateMatrixOfN_ValuesMatrixC() // Obliczanie funkcji kszta³tu
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
@@ -185,7 +188,7 @@ void UniversalElement::printMatrixOfN_ValuesMatrixC()
     }
 }
 
-double N_Function(double ksi, double eta, int i)
+double N_Function(double ksi, double eta, int i) // Funkcje kszta³tu N1, N2, N3, N4
 {
     switch (i)
     {
@@ -215,6 +218,7 @@ void UniversalElement::printMatrixOfN_Values(int surf)
     cout << endl;
 }
 
+// Pochodne funkcji kszta³tu
 double dN1_dKsi(double eta) {
     return (-(1.0 / 4.0) * (1.0 - eta));
 }

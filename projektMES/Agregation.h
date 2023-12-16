@@ -8,9 +8,9 @@
 
 using namespace std;
 
-// System of Equation
+// System of Equation (uk³ad równañ)
 struct SoE {
-	int n;
+	int n; // liczba wêz³ów siatki
 	double** HG;
 	double** CG;
 	double* PG;

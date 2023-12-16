@@ -10,6 +10,7 @@ using namespace std;
 
 struct Jakobian
 {
+    // Elementy macierzy Jakobiego
     double dx_dKsi;
     double dy_dKsi;
     double dx_dEta;
@@ -19,9 +20,9 @@ struct Jakobian
     double** dN_dy;
     int N;
 
-    double kt;
-    double dV;
-    double dS;
+    double kt; // Wspó³czynnik przewodnoœci cieplnej
+    double dV; // Objêtoœæ elementu
+    double dS; // Powierzchnia elementu
 
     double*** xH_AtPci;
     double*** yH_AtPci;

@@ -3,22 +3,23 @@
 #include <string>
 #include <iomanip>
 #include <cmath>
-#include <sys/stat.h> // Dodane dla funkcji mkdir w systemach Unix-like
+#include <sys/stat.h> // Dodane dla funkcji mkdir w systemach Unix
 #include <direct.h>   // Dodane dla funkcji _mkdir w systemie Windows
 
 #include "ParaView.h"
 
 using namespace std;
 
-bool createDirectory(const string& path) 
+bool createDirectory(const string& path) // Tworzenie katalogu dla konkretnej siatki
 {
 #ifdef _WIN32 // sprawdza, czy kod jest kompilowany pod systemem Windows
     return _mkdir(path.c_str()) == 0; // Funkcja _mkdir zwraca 0, jeœli operacja utworzenia folderu siê powiedzie
-#else // wersja Linux
+#else // wersja Unix
     return mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0; //Opcje S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH ustawiaj¹ prawa dostêpu do folderu, umo¿liwiaj¹c pe³ny dostêp dla w³aœciciela i odczyt/uruchamianie dla innych. 
 #endif
 }
 
+// Tworzenie pliku ParaView dla konkretnej siatki
 void createParaViewFile(string katalogName, GlobalData& globalData, Grid& grid, SoE& soe, int time)
 {
     createDirectory(katalogName);

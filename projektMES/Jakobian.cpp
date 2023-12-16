@@ -3,6 +3,9 @@
 #include "Grid.h"
 #include "Jakobian.h"
 
+/////////////// H //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Obliczanie elementów macierzy Jakobiego
 void Jakobian::calculateDerivativesAtPci(const UniversalElement& universalElement, const Grid& grid, int elementNumber, int pc)
 {
     dx_dKsi = universalElement.dN_dKsi[pc][0] * grid.nodes[grid.elements[elementNumber].id[2] - 1].x +
@@ -33,7 +36,7 @@ void Jakobian::printJakobianMatrix()
     cout << dx_dEta << "\t" << dy_dEta << endl;
 }
 
-double Jakobian::calculateDetJ()
+double Jakobian::calculateDetJ() // Obliczanie wyznacznika DetJ
 {
     double detJ = (dx_dKsi * dy_dEta) - (dy_dKsi * dx_dEta);
     return detJ;
@@ -50,7 +53,7 @@ double Jakobian::calculate1_DetJ()
     return result;
 }
 
-void Jakobian::calculateJakobianMatrix()
+void Jakobian::calculateJakobianMatrix()  // Obliczenie macierzy przejœcia po podzieleniu oraz przemno¿eniu przez DetJ
 {
     double value1_DetJ = calculate1_DetJ();
     dx_dKsi = value1_DetJ * dx_dKsi;
@@ -137,6 +140,7 @@ Jakobian::~Jakobian()
     delete[] Hpci;
 }
 
+// Obliczenie szukanych dN/dx oraz dN/dy w zadanym punkcie ca³kowania
 void Jakobian::calculateShapeFunctionDerivativesForPci(const UniversalElement& universalElement, int pc)
 {
     dN_dx[pc][0] = dy_dEta * universalElement.dN_dKsi[pc][0] + (-1 * dy_dKsi) * universalElement.dN_dEta[pc][0];
@@ -166,6 +170,7 @@ void Jakobian::printShapeFunctionDerivativesForPci(int pc)
     cout << endl;
 }
 
+// Obliczanie macierzy HpciX oraz HpciY
 void Jakobian::calculateMatrixHForXandYForPci(int pc)
 {
     for (int i = 0; i < 4; i++)
@@ -178,10 +183,11 @@ void Jakobian::calculateMatrixHForXandYForPci(int pc)
     }
 }
 
+// Obliczanie macierzy Hpci z uwzglêdnieniem kt oraz dV
 void Jakobian::calculateMatrixHpci(int pc, int conductivity)
 {
-    int kt = conductivity; // conductivity
-    dV = calculate1_DetJ(); //volume of the integrated element 
+    int kt = conductivity; // Wspó³czynnik przewodzenia ciep³a
+    dV = calculate1_DetJ(); // Objêtoœæ elementu
 
     for (int i = 0; i < 4; i++)
     {
@@ -205,6 +211,7 @@ void Jakobian::printMatrixHpci()
     }
 }
 
+// Dodawanie do siebie macierzy Hpci z uwzglêdnieniem wag
 void Jakobian::calculateMatrixH(const Grid& grid, int elementNumber)
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
@@ -236,8 +243,9 @@ void Jakobian::printMatrixH(const Grid& grid, int elementNumber)
         cout << endl;
     }
 }
-/////////////////////////////////// Hbc //////////////////////////////////////////////
-double Jakobian::calculateHbcDetJ(const Grid& grid, int Nx, int Nk)
+/////////////// Hbc ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+double Jakobian::calculateHbcDetJ(const Grid& grid, int Nx, int Nk) // Obliczenie detJ korzystaj¹c z tw. Pitagorasa
 {
     double L = sqrt(pow((grid.nodes[Nx].x - grid.nodes[Nk].x), 2) + pow((grid.nodes[Nx].y - grid.nodes[Nk].y), 2));
     double DetJ = L / 2;
@@ -249,7 +257,7 @@ void Jakobian::printHbcDetJ(const Grid& grid, int Nx, int Nk)
     cout << "DetJ for surface = " << calculateHbcDetJ(grid, Nx, Nk) << endl;
 }
 
-void Jakobian::calculateMatrixHbciForPci(const UniversalElement& universalElement, int surface)
+void Jakobian::calculateMatrixHbciForPci(const UniversalElement& universalElement, int surface) // Obliczenie Hbc dla konkretnej œciany uwzglêdniaj¹c wagi
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
@@ -270,10 +278,10 @@ void Jakobian::calculateMatrixHbciForPci(const UniversalElement& universalElemen
     }
 }
 
-void Jakobian::calculateMatrixHbci(int surface, int alfa, const Grid& grid, int Nx, int Nk)
+void Jakobian::calculateMatrixHbci(int surface, int alfa, const Grid& grid, int Nx, int Nk) // Obliczenie Hbc uwzglêdniaj¹c alfa i dSS
 {
     int a = alfa; // alfa
-    dS = calculateHbcDetJ(grid, Nx, Nk); // area of the integrated element 
+    dS = calculateHbcDetJ(grid, Nx, Nk); // Powierzchnia elementu
 
     for (int i = 0; i < 4; i++)
     {
@@ -297,7 +305,7 @@ void Jakobian::printMatrixHbci()
     }
 }
 
-void Jakobian::calculateMatrixHbc(const Grid& grid, int elementNumber)
+void Jakobian::calculateMatrixHbc(const Grid& grid, int elementNumber) // Sumowanie Hbci
 {
     for (int i = 0; i < 4; i++)
     {
@@ -334,7 +342,7 @@ void Jakobian::zeroMatrixHbci()
     }
 }
 
-void Jakobian::sumMatrixH_Hbc(const Grid& grid, int elementNumber)
+void Jakobian::sumMatrixH_Hbc(const Grid& grid, int elementNumber) // Sumowanie H + Hbc po obliczeniu Hbc
 {
     for (int i = 0; i < 4; i++)
     {
@@ -345,7 +353,8 @@ void Jakobian::sumMatrixH_Hbc(const Grid& grid, int elementNumber)
     }
 }
 
-///////////////////////// Vector P ////////////////////////////////
+/////////////// Vector P ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Jakobian::zeroVectorP(const Grid& grid, int elementNumber)
 {
     for (int i = 0; i < 4; i++)
@@ -354,11 +363,12 @@ void Jakobian::zeroVectorP(const Grid& grid, int elementNumber)
     }
 }
 
+// Obliczenie wektora P uwzglêdniaj¹c wagi, tot, alfa, dS dla konkretnej œciany
 void Jakobian::calculateVectorP_ForPci(const Grid& grid, const UniversalElement& universalElement, int surface, int elementNumber, int tot, int alfa, int Nx, int Nk)
 {
     int a = alfa; // alfa
-    dS = calculateHbcDetJ(grid, Nx, Nk); // area of the integrated element
-    int t = tot; // ambient temperature
+    dS = calculateHbcDetJ(grid, Nx, Nk); // Powierchnia elementu
+    int t = tot; // temperatura otoczenia
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
     for (int i = 0, n = N - 1; i < N; i++, n--)
@@ -384,12 +394,14 @@ void Jakobian::printVectorP(const Grid& grid, int elementNumber)
     cout << endl;
 }
 
-// Matrix C
+/////////////// C //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Obliczenie macierzy Cpci uwzglêdniaj¹c ciep³o w³aœciwe, gêstoœæ, dV
 void Jakobian::calculateMatrixCpci(const UniversalElement& universalElement, int pc, int specificHeat, int density)
 {
-    int c = specificHeat; // specific heat
-    int ro = density; // density
-    dV = calculate1_DetJ(); //volume of the integrated element 
+    int c = specificHeat; // Ciep³o w³aœciwe
+    int ro = density; // Gêstoœæ
+    dV = calculate1_DetJ(); // Objêtoœæ elementu
 
     for (int i = 0; i < 4; i++)
     {
@@ -413,7 +425,7 @@ void Jakobian::printMatrixCpci()
     }
 }
 
-void Jakobian::calculateMatrixC(const Grid& grid, int elementNumber)
+void Jakobian::calculateMatrixC(const Grid& grid, int elementNumber) // Sumowanie macierzy Cpci uwzglêdniaj¹c wagi
 {
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 
