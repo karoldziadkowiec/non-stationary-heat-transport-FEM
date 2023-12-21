@@ -278,7 +278,7 @@ void Jakobian::calculateMatrixHbciForPci(const UniversalElement& universalElemen
     }
 }
 
-void Jakobian::calculateMatrixHbci(int surface, int alfa, const Grid& grid, int Nx, int Nk) // Obliczenie Hbc uwzglêdniaj¹c alfa i dSS
+void Jakobian::calculateMatrixHbci(int surface, int alfa, const Grid& grid, int Nx, int Nk) // Obliczenie Hbc uwzglêdniaj¹c alfa i dS
 {
     int a = alfa; // alfa
     dS = calculateHbcDetJ(grid, Nx, Nk); // Powierzchnia elementu
@@ -367,7 +367,7 @@ void Jakobian::zeroVectorP(const Grid& grid, int elementNumber)
 void Jakobian::calculateVectorP_ForPci(const Grid& grid, const UniversalElement& universalElement, int surface, int elementNumber, int tot, int alfa, int Nx, int Nk)
 {
     int a = alfa; // alfa
-    dS = calculateHbcDetJ(grid, Nx, Nk); // Powierchnia elementu
+    dS = calculateHbcDetJ(grid, Nx, Nk); // powierzchnia elementu
     int t = tot; // temperatura otoczenia
     GaussQuadrature tableRow = returnRowOfGaussTable(N);
 

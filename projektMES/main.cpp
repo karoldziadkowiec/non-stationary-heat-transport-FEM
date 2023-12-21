@@ -40,6 +40,7 @@ void lab8();
 void lab8_Test1_4_4();
 void lab8_Test2_4_4_MixGrid();
 void lab8_Test3_31_31_kwadrat();
+void lab8_Test4_31_31_trapez();
 
 int main()
 {
@@ -60,8 +61,9 @@ int main()
     //lab7_Test2_4_4_MixGrid();
     //lab8();
     //lab8_Test1_4_4();
-    lab8_Test2_4_4_MixGrid();
+    //lab8_Test2_4_4_MixGrid();
     //lab8_Test3_31_31_kwadrat();
+    lab8_Test4_31_31_trapez();
 
     return 0;
 }
@@ -1629,6 +1631,144 @@ void lab8_Test3_31_31_kwadrat()
     Grid testGrid;
     GlobalData globalData;
     string fileName = "Test3_31_31_kwadrat.txt";
+
+    readDataFromFile(fileName, globalData, testGrid);
+    printGridData(globalData, testGrid);
+    int kt = globalData.conductivity; // conductivity
+    int alfa = globalData.alfa; // heat transfer coefficient
+    int tot = globalData.tot; // ambient temperature
+    int c = globalData.specificHeat; // specific heat
+    int ro = globalData.density; // density
+    int dt = globalData.simulationStepTime; // simulationStepTime - deltaTau
+    int t0 = globalData.initialTemp; // initialTemp - t0
+
+    int N = 2; //Nodes number
+    UniversalElement universalElement(N);
+    universalElement.calculateShapeFunctionDerivatives();
+    //universalElement.printShapeFunctionDerivatives();
+
+    universalElement.calculateKsiEtaMatrix_Values();
+    //universalElement.printKsiEtaMatrix_Values();
+    universalElement.calculateMatrixOfN_ValuesMatrixC();
+    //universalElement.printMatrixOfN_ValuesMatrixC();
+    SoE soe(globalData.nodesNumber);
+
+    Jakobian jakobian(N);
+    for (int elNumber = 0; elNumber < globalData.elementsNumber; elNumber++) {
+        //cout << "\n\n\t\tELEMENT " << elNumber + 1 << endl;
+        for (int pc = 0; pc < N * N; pc++) {
+            //cout << "\n\tPunkt calkowania " << pc + 1 << endl;
+            jakobian.calculateDerivativesAtPci(universalElement, testGrid, elNumber, pc);
+            //jakobian.printJakobianMatrix();
+            //jakobian.printDetJ();
+            jakobian.calculateJakobianMatrix();
+            jakobian.calculateShapeFunctionDerivativesForPci(universalElement, pc);
+            //jakobian.printShapeFunctionDerivativesForPci(pc);
+            jakobian.calculateMatrixHForXandYForPci(pc);
+            jakobian.calculateMatrixHpci(pc, kt);
+            jakobian.calculateMatrixCpci(universalElement, pc, c, ro);
+        }
+        //jakobian.printMatrixHpci();
+        jakobian.calculateMatrixH(testGrid, elNumber);
+        //jakobian.printMatrixH(testGrid, elNumber);
+        //jakobian.printMatrixCpci();
+
+        jakobian.zeroVectorP(testGrid, elNumber);
+        jakobian.calculateMatrixC(testGrid, elNumber);
+        //jakobian.printMatrixC(testGrid, elNumber);
+
+        for (int surface = 0; surface < 4; surface++) {
+            if (surface == 0) {
+                if ((testGrid.nodes[testGrid.elements[elNumber].id[2] - 1].BC != 0) && (testGrid.nodes[testGrid.elements[elNumber].id[3] - 1].BC != 0)) {
+                    universalElement.calculateMatrixOfN_Values(surface);
+                    //universalElement.printMatrixOfN_Values(surface);
+                    jakobian.calculateHbcDetJ(testGrid, testGrid.elements[elNumber].id[2] - 1, testGrid.elements[elNumber].id[3] - 1);
+                    //jakobian.printHbcDetJ(testGrid, testGrid.elements[elNumber].id[2] - 1, testGrid.elements[elNumber].id[3] - 1);
+                    jakobian.calculateMatrixHbciForPci(universalElement, surface);
+                    jakobian.calculateMatrixHbci(surface, alfa, testGrid, testGrid.elements[elNumber].id[2] - 1, testGrid.elements[elNumber].id[3] - 1);
+                    jakobian.calculateVectorP_ForPci(testGrid, universalElement, surface, elNumber, tot, alfa, testGrid.elements[elNumber].id[2] - 1, testGrid.elements[elNumber].id[3] - 1);
+                }
+            }
+            else if (surface == 1) {
+                if ((testGrid.nodes[testGrid.elements[elNumber].id[3] - 1].BC != 0) && (testGrid.nodes[testGrid.elements[elNumber].id[0] - 1].BC != 0)) {
+                    universalElement.calculateMatrixOfN_Values(surface);
+                    //universalElement.printMatrixOfN_Values(surface);
+                    jakobian.calculateHbcDetJ(testGrid, testGrid.elements[elNumber].id[3] - 1, testGrid.elements[elNumber].id[0] - 1);
+                    //jakobian.printHbcDetJ(testGrid, testGrid.elements[elNumber].id[3] - 1, testGrid.elements[elNumber].id[0] - 1);
+                    jakobian.calculateMatrixHbciForPci(universalElement, surface);
+                    jakobian.calculateMatrixHbci(surface, alfa, testGrid, testGrid.elements[elNumber].id[3] - 1, testGrid.elements[elNumber].id[0] - 1);
+                    jakobian.calculateVectorP_ForPci(testGrid, universalElement, surface, elNumber, tot, alfa, testGrid.elements[elNumber].id[3] - 1, testGrid.elements[elNumber].id[0] - 1);
+                }
+            }
+            else if (surface == 2) {
+                if ((testGrid.nodes[testGrid.elements[elNumber].id[0] - 1].BC != 0) && (testGrid.nodes[testGrid.elements[elNumber].id[1] - 1].BC != 0)) {
+                    universalElement.calculateMatrixOfN_Values(surface);
+                    //universalElement.printMatrixOfN_Values(surface);
+                    jakobian.calculateHbcDetJ(testGrid, testGrid.elements[elNumber].id[0] - 1, testGrid.elements[elNumber].id[1] - 1);
+                    //jakobian.printHbcDetJ(testGrid, testGrid.elements[elNumber].id[0] - 1, testGrid.elements[elNumber].id[1] - 1);
+                    jakobian.calculateMatrixHbciForPci(universalElement, surface);
+                    jakobian.calculateMatrixHbci(surface, alfa, testGrid, testGrid.elements[elNumber].id[0] - 1, testGrid.elements[elNumber].id[1] - 1);
+                    jakobian.calculateVectorP_ForPci(testGrid, universalElement, surface, elNumber, tot, alfa, testGrid.elements[elNumber].id[0] - 1, testGrid.elements[elNumber].id[1] - 1);
+                }
+            }
+            else if (surface == 3) {
+                if ((testGrid.nodes[testGrid.elements[elNumber].id[1] - 1].BC != 0) && (testGrid.nodes[testGrid.elements[elNumber].id[2] - 1].BC != 0)) {
+                    universalElement.calculateMatrixOfN_Values(surface);
+                    //universalElement.printMatrixOfN_Values(surface);
+                    jakobian.calculateHbcDetJ(testGrid, testGrid.elements[elNumber].id[1] - 1, testGrid.elements[elNumber].id[2] - 1);
+                    //jakobian.printHbcDetJ(testGrid, testGrid.elements[elNumber].id[1] - 1, testGrid.elements[elNumber].id[2] - 1);
+                    jakobian.calculateMatrixHbciForPci(universalElement, surface);
+                    jakobian.calculateMatrixHbci(surface, alfa, testGrid, testGrid.elements[elNumber].id[1] - 1, testGrid.elements[elNumber].id[2] - 1);
+                    jakobian.calculateVectorP_ForPci(testGrid, universalElement, surface, elNumber, tot, alfa, testGrid.elements[elNumber].id[1] - 1, testGrid.elements[elNumber].id[2] - 1);
+                }
+            }
+        }
+        //jakobian.printMatrixHbci();
+        jakobian.calculateMatrixHbc(testGrid, elNumber);
+        //jakobian.printMatrixHbc(testGrid, elNumber);
+        jakobian.sumMatrixH_Hbc(testGrid, elNumber);
+        //jakobian.printMatrixH(testGrid, elNumber);
+        //jakobian.printVectorP(testGrid, elNumber);
+        jakobian.zeroMatrixHbci();
+
+        soe.aggregateMatrixHG(testGrid, elNumber);
+        soe.aggregateVectorPG(testGrid, elNumber);
+        soe.aggregateMatrixCG(testGrid, elNumber);
+    }
+    //soe.printAggregatedMatrixHG();
+    //soe.printAggregatedVectorPG();
+    soe.solveSoE();
+    //soe.printSoE();
+
+    //soe.printAggregatedMatrixCG();
+
+    soe.initialStartTemperature(t0);
+    for (int time = globalData.simulationStepTime; time <= globalData.simulationTime; time += globalData.simulationStepTime) {
+        soe.calculateMatrixHplusC_dT(testGrid, globalData.elementsNumber, dt);
+        //soe.printMatrixHplusC_dT(testGrid, globalData.elementsNumber);
+        soe.zeroAggregatedMatrixH();
+        soe.aggregateMatrixHplusC_dT(testGrid, globalData.elementsNumber);
+        //soe.printAggregatedMatrixHG();
+        soe.calculateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber, dt);
+        //soe.printMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
+        soe.zeroAggregatedMatrixP();
+        soe.aggregateMatrixCt0_dTplusP(testGrid, globalData.elementsNumber);
+        //soe.printAggregatedVectorPG();
+        soe.solveSoE();
+        //soe.printSoE();
+        soe.displayMinMaxTemperature(time);
+        createParaViewFile(name, globalData, testGrid, soe, time);
+    }
+}
+
+void lab8_Test4_31_31_trapez()
+{
+    string name = "Test4_31_31_trapez";
+    cout << "\n " << name << endl;
+
+    Grid testGrid;
+    GlobalData globalData;
+    string fileName = "Test4_31_31_trapez.txt";
 
     readDataFromFile(fileName, globalData, testGrid);
     printGridData(globalData, testGrid);
