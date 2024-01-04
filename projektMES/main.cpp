@@ -61,9 +61,9 @@ int main()
     //lab7_Test2_4_4_MixGrid();
     //lab8();
     //lab8_Test1_4_4();
-    //lab8_Test2_4_4_MixGrid();
+    lab8_Test2_4_4_MixGrid();
     //lab8_Test3_31_31_kwadrat();
-    lab8_Test4_31_31_trapez();
+    //lab8_Test4_31_31_trapez();
 
     return 0;
 }
