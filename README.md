@@ -10,9 +10,20 @@ Steps taken:
 3. Calculation of the matrix [H] for a finite element.
 4. Calculation of the matrix [C] for a finite element.
 5. Entering the convection boundary condition:
-a. Calculation of the [HBC] matrix for a finite element.
-b. Calculation of the {P} vector for a finite element
+- Calculation of the [HBC] matrix for a finite element.
+- Calculation of the {P} vector for a finite element
 6. Aggregation of matrices and vectors.
 7. Construction of a system of equations for a specific time step.
 8. Generating a .vtk file to visualize the temperature on the grid.
+
+Dane z pliku tekstowego dotyczące siatki MixGrid:
+● Całkowity czas symulacji: 500 [𝑠]
+● Krok czasowy symulacji: 50 [𝑠]
+● Przewodność cieplna: 25 [𝑊/𝑚ꞏ 𝐾]
+● Współczynnik konwekcyjnej wymiany ciepła: 300 [𝑊𝑚²ꞏ 𝐾]
+● Temperatura otoczenia: 1200 [°𝐶]
+● Temperatura początkowa: 100 [°𝐶]
+● Gęstość: 7800 [𝑘𝑔𝑚³]
+● Ciepło właściwe: 700 [𝐽𝑘𝑔 · 𝐾]
+● Liczba węzłów: 16
 
