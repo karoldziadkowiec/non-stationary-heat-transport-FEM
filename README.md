@@ -16,7 +16,9 @@ Steps taken:
 7. Construction of a system of equations for a specific time step.
 8. Generating a .vtk file to visualize the temperature on the grid.
 
-MixGrid text file data:
+MixGrid mesh:
+
+Data:
 - Total simulation time: 500 [𝑠]
 - Simulation time step: 50 [𝑠]
 - Thermal conductivity: 25 [𝑊/𝑚ꞏ 𝐾]
@@ -27,3 +29,18 @@ MixGrid text file data:
 - Specific heat capacity: 700 [𝐽𝑘𝑔 · 𝐾]
 - Number of nodes: 16
 
+Temperature results for integration scheme = 2:
+
+Temperature results for integration scheme = 3:
+
+Temperature results for integration scheme = 4:
+
+50th second of the process:
+
+100 seconds of the process:
+
+150 seconds of the process:
+
+200 seconds of the process:
+
+500 seconds of the process:
