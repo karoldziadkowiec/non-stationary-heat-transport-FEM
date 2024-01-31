@@ -21,12 +21,12 @@ MixGrid mesh:
 Data:
 - Total simulation time: 500 [𝑠]
 - Simulation time step: 50 [𝑠]
-- Thermal conductivity: 25 [𝑊/𝑚ꞏ 𝐾]
-- Convective heat transfer coefficient: 300 [𝑊𝑚²ꞏ 𝐾]
+- Thermal conductivity: 25 [𝑊/(𝑚ꞏ 𝐾)]
+- Convective heat transfer coefficient: 300 [𝑊/(𝑚²ꞏ 𝐾)]
 - Ambient temperature: 1200 [°𝐶]
 - Initial temperature: 100 [°𝐶]
-- Density: 7800 [𝑘𝑔𝑚³]
-- Specific heat capacity: 700 [𝐽𝑘𝑔 · 𝐾]
+- Density: 7800 [𝑘𝑔/𝑚³]
+- Specific heat capacity: 700 [𝐽(𝑘𝑔 · 𝐾)]
 - Number of nodes: 16
 
 Temperature results for integration scheme = 2:
