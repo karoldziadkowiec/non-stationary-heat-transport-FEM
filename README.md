@@ -26,7 +26,7 @@ Data:
 - Ambient temperature: 1200 [°𝐶]
 - Initial temperature: 100 [°𝐶]
 - Density: 7800 [𝑘𝑔/𝑚³]
-- Specific heat capacity: 700 [𝐽(𝑘𝑔 · 𝐾)]
+- Specific heat capacity: 700 [𝐽/(𝑘𝑔 · 𝐾)]
 - Number of nodes: 16
 
 Temperature results for integration scheme = 2:
