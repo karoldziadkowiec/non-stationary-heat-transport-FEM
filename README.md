@@ -17,7 +17,7 @@ Steps taken:
 8. Generating a .vtk file to visualize the temperature on the grid.
 
 MixGrid mesh:
-
+![1](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/1.png)
 Data:
 - Total simulation time: 500 [𝑠]
 - Simulation time step: 50 [𝑠]
@@ -30,17 +30,19 @@ Data:
 - Number of nodes: 16
 
 Temperature results for integration scheme = 2:
-
+![2](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/2.png)
 Temperature results for integration scheme = 3:
-
+![3](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/3.png)
 Temperature results for integration scheme = 4:
+![4](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/4.png)
 
 50th second of the process:
-
+![50](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/50.png)
 100 seconds of the process:
-
+![100](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/100.png)
 150 seconds of the process:
-
+![150](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/150.png)
 200 seconds of the process:
-
+![200](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/200.png)
 500 seconds of the process:
+![500](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/500.png)
