@@ -10,8 +10,8 @@ Steps taken:
 3. Calculation of the matrix [H] for a finite element.
 4. Calculation of the matrix [C] for a finite element.
 5. Entering the convection boundary condition:
-- Calculation of the [HBC] matrix for a finite element.
-- Calculation of the {P} vector for a finite element
+5.1 Calculation of the [HBC] matrix for a finite element.
+5.2 Calculation of the {P} vector for a finite element
 6. Aggregation of matrices and vectors.
 7. Construction of a system of equations for a specific time step.
 8. Generating a .vtk file to visualize the temperature on the grid.
