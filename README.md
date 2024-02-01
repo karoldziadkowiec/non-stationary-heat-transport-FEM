@@ -16,9 +16,9 @@ Steps taken:
 7. Construction of a system of equations for a specific time step.
 8. Generating a .vtk file to visualize the temperature on the grid.
 
-MixGrid mesh:
+Loaded example mesh:
 ![1](https://github.com/karoldziadkowiec/non-stationary-heat-transport-FEN/blob/master/photos/1.png)
-Data:
+Mesh data:
 - Total simulation time: 500 [𝑠]
 - Simulation time step: 50 [𝑠]
 - Thermal conductivity: 25 [𝑊/(𝑚ꞏ 𝐾)]
