@@ -2,7 +2,7 @@
 
 Technology used in the project: C++ with visual rendering in ParaView
 
-Software for simulating the non-stationary heat transport process using Finite Element Method (FEN) with convection boundary condition - popular method for numerically solving differential equations arising in engineering and mathematical modeling. The software operates in 2D space. The main goal is to calculate the temperature vector {t1} for a specific time step and visualize it on grids. The temperature vector {t1} contains the calculated temperatures at each grid node for a given time step.
+Software for simulating the non-stationary heat transport process using Finite Element Method (FEM) with convection boundary condition - popular method for numerically solving differential equations arising in engineering and mathematical modeling. The software operates in 2D space. The main goal is to calculate the temperature vector {t1} for a specific time step and visualize it on grids. The temperature vector {t1} contains the calculated temperatures at each grid node for a given time step.
 
 Steps taken:
 1. Reading mesh data from a text file.
